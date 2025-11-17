@@ -94,7 +94,7 @@ int juego_cargar_pokedex(juego_t *juego, const char *archivo){
 }
 
 
-
+ //perro
 /* Obtiene la cantidad de pokemones en la pokedex.
  * 
  * Devuelve la cantidad de pokemones o 0 si el juego es NULL.
