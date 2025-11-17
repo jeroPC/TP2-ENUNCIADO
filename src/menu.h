@@ -84,4 +84,4 @@ void menu_ejecutar(menu_t *menu, void *ctx_externo);
  */
 void menu_destruir(menu_t *menu);
 
-#endif // MENU_
+#endif // MENU_H

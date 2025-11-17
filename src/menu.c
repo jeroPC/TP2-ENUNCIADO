@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L
 #include "menu.h"
 #include "ansi.h"
 #include <stdlib.h>
@@ -161,9 +162,9 @@ void menu_ejecutar(menu_t *menu ,void *ctx_externo){
     bool continuar = true;
     while(continuar){
         menu_mostrar(menu);
-        printf("\nselecciona una opcion:" );
+        printf("\nSelecciona una opción: ");
         char opcion;
-        scanf("%c",&opcion);
+        scanf(" %c",&opcion);  // Espacio antes de %c para ignorar whitespace
         
         bool encontrada = false;
         size_t i;
@@ -175,18 +176,16 @@ void menu_ejecutar(menu_t *menu ,void *ctx_externo){
                 }else if(menu->opciones[i].submenu){
                     menu_ejecutar(menu->opciones[i].submenu, ctx_externo);
                 }else{
-                    printf("error");
+                    printf("Error: opción sin acción ni submenú.\n");
                 }
+                break;  // Salir del for una vez encontrada la opción
             }
         if (!encontrada){
-            printf("Opción inválida.\n");
+            printf("\n" ANSI_COLOR_RED "✗ Opción inválida. Intenta de nuevo.\n" ANSI_COLOR_RESET);
         }
     }
    
 }
-
-
-
 
 
 
