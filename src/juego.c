@@ -87,3 +87,97 @@ int juego_cargar_pokedex(juego_t *juego, const char *archivo){
     return -1;
 
 }
+
+
+
+/* Obtiene la cantidad de pokemones en la pokedex.
+ * 
+ * Devuelve la cantidad de pokemones o 0 si el juego es NULL.
+ */
+size_t juego_cantidad_pokemones(juego_t *juego){
+    if(!juego || !juego->pokedex ) return 0;
+    return lista_cantidad(juego->pokedex);
+}
+
+
+
+
+/* Busca pokemones por nombre (búsqueda parcial).
+ * Los resultados se almacenan en el array resultados.
+ * 
+ * Devuelve la cantidad de pokemones encontrados.
+ */
+size_t juego_buscar_por_nombre(juego_t *juego, const char *nombre, 
+                               pokemon_t **resultados, size_t max_resultados){
+                                
+    if (!juego || !nombre || !resultados || max_resultados == 0)
+    return 0;
+
+    size_t encontrados = 0;
+    size_t cantidad = lista_cantidad(juego->pokedex);
+
+    for(size_t i = 0 ; i < cantidad && encontrados < max_resultados; i++){
+        pokemon_t *pokemon = lista_buscar_elemento(juego->pokedex , i);
+         if (pokemon && strstr(pokemon->nombre, nombre)) { 
+            resultados[encontrados++] = pokemon;
+        }
+    }
+    return encontrados;
+}
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//FUNCIONES AUXILIARES :
+
+void mezclar_cartas(lista_t *cartas) {
+    size_t n = lista_cantidad(cartas);
+    for (size_t i = n - 1; i > 0; i--) {
+        size_t j = rand() % (i + 1);
+        void *tmp = lista_elemento_en_posicion(cartas, i);
+        void *otro = lista_elemento_en_posicion(cartas, j);
+        lista_eliminar_elemento(cartas, i);
+        lista_insertar(cartas, otro, i);
+        lista_eliminar_elemento(cartas, j);
+        lista_insertar(cartas, tmp, j);
+    }
+}
+
+//aleatoriedad de cartas de pokemon 
+void juego_crear_cartas_memoria(juego_t *juego) {
+    if (!juego || lista_cantidad(juego->pokedex) < 9)
+        return;
+
+    size_t total = lista_cantidad(juego->pokedex);
+    bool usados[total];
+    memset(usados, 0, sizeof(usados)); //Establece todos los elementos del arreglo usados en cero (false).
+
+    // Selecciona 9 pokemones distintos al azar
+    for (int i = 0; i < 9; ) {
+        size_t idx = rand() % total;
+        if (!usados[idx]) {
+            struct pokemon *pk = lista_elemento_en_posicion(juego->pokedex, idx);
+            lista_insertar(juego->cartas, pk, lista_cantidad(juego->cartas));
+            lista_insertar(juego->cartas, pk, lista_cantidad(juego->cartas)); // Duplicado
+            usados[idx] = true;
+            i++;
+        }
+    }
+    mezclar_cartas(juego->cartas);
+
+}
