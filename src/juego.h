@@ -3,31 +3,15 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "tp1.h"
 
 #define MAX_NOMBRE_POKEMON 256
 #define MAX_TIPO 5
 #define TOTAL_CARTAS 18
 #define MAX_JUGADAS_MOSTRADAS 5
 
-/* Tipos de Pokemón */
-typedef enum {
-    TIPO_NORMAL,
-    TIPO_FUEGO,
-    TIPO_AGUA,
-    TIPO_PLANTA,
-    TIPO_ELECTRICO,
-    TIPO_DESCONOCIDO
-} tipo_pokemon_t;
-
-/* Estructura de un Pokémon */
-typedef struct pokemon {
-    int id;
-    char nombre[MAX_NOMBRE_POKEMON];
-    tipo_pokemon_t tipo;
-    int ataque;
-    int defensa;
-    int velocidad;
-} pokemon_t;
+/* Usamos las definiciones de tp1.h */
+typedef struct pokemon pokemon_t;
 
 /* Estructura de una carta en el juego */
 typedef struct carta {
@@ -67,6 +51,12 @@ int juego_cargar_pokedex(juego_t *juego, const char *archivo);
  * Devuelve la cantidad de pokemones o 0 si el juego es NULL.
  */
 size_t juego_cantidad_pokemones(juego_t *juego);
+
+/* Obtiene la cantidad de cartas creadas en el juego.
+ * 
+ * Devuelve la cantidad de cartas o 0 si el juego es NULL.
+ */
+size_t juego_cantidad_cartas(juego_t *juego);
 
 /* Busca pokemones por nombre (búsqueda parcial).
  * Los resultados se almacenan en el array resultados.
@@ -196,6 +186,11 @@ int juego_obtener_ganador(juego_t *juego);
  */
 void juego_finalizar_partida(juego_t *juego);
 
+/* Crea las cartas de memoria para el juego.
+ * Selecciona 9 pokemones al azar y crea 18 cartas (9 pares).
+ */
+void juego_crear_cartas_memoria(juego_t *juego);
+
 /* Destruye el juego y libera toda la memoria asociada.
  * Incluye la pokedex y el estado de la partida.
  * 
@@ -204,9 +199,9 @@ void juego_finalizar_partida(juego_t *juego);
 void juego_destruir(juego_t *juego);
 
 /* Convierte un string de tipo a enum */
-tipo_pokemon_t juego_tipo_desde_string(const char *tipo_str);
+enum tipo_pokemon juego_tipo_desde_string(const char *tipo_str);
 
 /* Convierte un enum de tipo a string */
-const char *juego_tipo_a_string(tipo_pokemon_t tipo);
+const char *juego_tipo_a_string(enum tipo_pokemon tipo);
 
 #endif // JUEGO_H

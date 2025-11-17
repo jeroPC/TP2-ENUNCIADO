@@ -1,5 +1,7 @@
 #include "pa2m.h"
 #include "src/menu.h"
+#include "src/juego.h"
+#include "src/tp1.h"
 #include <string.h>
 
 bool accion_valida(void *ctx_interno, void *ctx_externo)
@@ -84,6 +86,156 @@ void pruebas_menu_cambiar_estilo_y_obtener()
 	menu_destruir(menu);
 }
 
+void test_juego_crear()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_crear");
+	
+	juego_t *juego = juego_crear();
+	pa2m_afirmar(juego != NULL, "Se puede crear un juego");
+	pa2m_afirmar(juego_cantidad_pokemones(juego) == 0, "Un juego nuevo no tiene pokemones");
+	
+	juego_destruir(juego);
+}
+
+void test_juego_cargar_pokedex()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_cargar_pokedex");
+	
+	juego_t *juego = juego_crear();
+	
+	int cargados = juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	pa2m_afirmar(cargados > 0, "Se pueden cargar pokemones desde un archivo válido");
+	pa2m_afirmar(juego_cantidad_pokemones(juego) == (size_t)cargados, 
+				 "La cantidad de pokemones coincide con los cargados");
+	
+	int error = juego_cargar_pokedex(NULL, "ejemplos/normal.csv");
+	pa2m_afirmar(error == -1, "No se puede cargar con juego NULL");
+	
+	error = juego_cargar_pokedex(juego, NULL);
+	pa2m_afirmar(error == -1, "No se puede cargar con archivo NULL");
+	
+	error = juego_cargar_pokedex(juego, "archivo_inexistente.csv");
+	pa2m_afirmar(error == -1, "No se puede cargar un archivo inexistente");
+	
+	juego_destruir(juego);
+}
+
+void test_juego_cantidad_pokemones()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_cantidad_pokemones");
+	
+	juego_t *juego = juego_crear();
+	
+	pa2m_afirmar(juego_cantidad_pokemones(juego) == 0, "Un juego vacío tiene 0 pokemones");
+	pa2m_afirmar(juego_cantidad_pokemones(NULL) == 0, "Un juego NULL tiene 0 pokemones");
+	
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	size_t cantidad = juego_cantidad_pokemones(juego);
+	pa2m_afirmar(cantidad > 0, "Después de cargar, hay pokemones en la pokedex");
+	
+	juego_destruir(juego);
+}
+
+void test_juego_buscar_por_nombre()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_buscar_por_nombre");
+	
+	juego_t *juego = juego_crear();
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	pokemon_t *resultados[10];
+	
+	// Búsqueda con parámetros NULL
+	size_t encontrados = juego_buscar_por_nombre(NULL, "Pika", resultados, 10);
+	pa2m_afirmar(encontrados == 0, "No se puede buscar con juego NULL");
+	
+	encontrados = juego_buscar_por_nombre(juego, NULL, resultados, 10);
+	pa2m_afirmar(encontrados == 0, "No se puede buscar con nombre NULL");
+	
+	encontrados = juego_buscar_por_nombre(juego, "Pika", NULL, 10);
+	pa2m_afirmar(encontrados == 0, "No se puede buscar con array de resultados NULL");
+	
+	encontrados = juego_buscar_por_nombre(juego, "Pika", resultados, 0);
+	pa2m_afirmar(encontrados == 0, "No se puede buscar con max_resultados = 0");
+	
+	// Búsqueda parcial válida
+	encontrados = juego_buscar_por_nombre(juego, "a", resultados, 10);
+	pa2m_afirmar(encontrados > 0, "Se encuentran pokemones con búsqueda parcial");
+	pa2m_afirmar(encontrados <= 10, "No se excede el límite de max_resultados");
+	
+	// Búsqueda que no debería encontrar nada
+	encontrados = juego_buscar_por_nombre(juego, "XXXZZZ", resultados, 10);
+	pa2m_afirmar(encontrados == 0, "No se encuentran pokemones con nombre inexistente");
+	
+	juego_destruir(juego);
+}
+
+void test_juego_crear_cartas_memoria()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_crear_cartas_memoria");
+	
+	juego_t *juego = juego_crear();
+	
+	// Intentar crear cartas sin pokemones
+	juego_crear_cartas_memoria(juego);
+	pa2m_afirmar(juego_cantidad_cartas(juego) == 0, 
+				 "No se crean cartas si no hay suficientes pokemones");
+	
+	// Cargar pokemones y crear cartas
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	// Verificar que hay al menos 9 pokemones
+	if (juego_cantidad_pokemones(juego) >= 9) {
+		juego_crear_cartas_memoria(juego);
+		pa2m_afirmar(juego_cantidad_cartas(juego) == 18, 
+					 "Se crean 18 cartas (9 pares) correctamente");
+		
+		// Verificar que hay pares (cada pokemon aparece 2 veces)
+		pa2m_afirmar(juego_cantidad_cartas(juego) % 2 == 0, 
+					 "La cantidad de cartas es par");
+	}
+	
+	juego_destruir(juego);
+}
+
+void test_juego_crear_cartas_memoria_con_pocos_pokemones()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_crear_cartas_memoria con pocos pokemones");
+	
+	juego_t *juego = juego_crear();
+	
+	// Intentar crear cartas con juego NULL
+	juego_crear_cartas_memoria(NULL);
+	pa2m_afirmar(true, "No crashea con juego NULL");
+	
+	juego_destruir(juego);
+}
+
+void test_integracion_juego_completa()
+{
+	pa2m_nuevo_grupo("Pruebas de integración del juego");
+	
+	juego_t *juego = juego_crear();
+	pa2m_afirmar(juego != NULL, "Se crea el juego correctamente");
+	
+	int cargados = juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	pa2m_afirmar(cargados > 0, "Se cargan pokemones correctamente");
+	
+	size_t cantidad = juego_cantidad_pokemones(juego);
+	pa2m_afirmar(cantidad == (size_t)cargados, "La cantidad es consistente");
+	
+	pokemon_t *resultados[5];
+	size_t encontrados = juego_buscar_por_nombre(juego, "a", resultados, 5);
+	pa2m_afirmar(encontrados > 0 && encontrados <= 5, "La búsqueda funciona correctamente");
+	
+	if (cantidad >= 9) {
+		juego_crear_cartas_memoria(juego);
+		pa2m_afirmar(juego_cantidad_cartas(juego) == 18, "Se crean las cartas de memoria");
+	}
+	
+	juego_destruir(juego);
+}
+
 int main()
 {
 	pa2m_nuevo_grupo("============== PRUEBAS MENU_CREAR ===============");
@@ -94,6 +246,15 @@ int main()
 
 	pa2m_nuevo_grupo("============== PRUEBAS CAMBIAR Y OBTENER ESTILO ===============");
 	pruebas_menu_cambiar_estilo_y_obtener();
+
+	pa2m_nuevo_grupo("============== PRUEBAS DEL TDA JUEGO ===============");
+	test_juego_crear();
+	test_juego_cargar_pokedex();
+	test_juego_cantidad_pokemones();
+	test_juego_buscar_por_nombre();
+	test_juego_crear_cartas_memoria();
+	test_juego_crear_cartas_memoria_con_pocos_pokemones();
+	test_integracion_juego_completa();
 
 	return pa2m_mostrar_reporte();
 }

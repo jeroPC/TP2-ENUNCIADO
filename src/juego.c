@@ -1,6 +1,7 @@
 #include "juego.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "lista.h"
 #include "pila.h"
 #include "abb.h"
@@ -58,8 +59,12 @@ juego_t *juego_crear(){
 bool insertar_pokemon_en_juego(struct pokemon *pokemon, void *contexto) {
     juego_t *juego = (juego_t *)contexto;
     
-    size_t pos = lista_cantidad(juego->pokedex);
-    if (!lista_insertar(juego->pokedex, pokemon,pos))
+    if (!pokemon || !juego) {
+        return false;
+    }
+    
+    // Agregar al final de la lista
+    if (!lista_agregar(juego->pokedex, pokemon))
         return false;
     
     // Insertar en el hash para búsqueda rápida por nombre
@@ -97,6 +102,15 @@ int juego_cargar_pokedex(juego_t *juego, const char *archivo){
 size_t juego_cantidad_pokemones(juego_t *juego){
     if(!juego || !juego->pokedex ) return 0;
     return lista_cantidad(juego->pokedex);
+}
+
+/* Obtiene la cantidad de cartas creadas en el juego.
+ * 
+ * Devuelve la cantidad de cartas o 0 si el juego es NULL.
+ */
+size_t juego_cantidad_cartas(juego_t *juego){
+    if(!juego || !juego->cartas) return 0;
+    return lista_cantidad(juego->cartas);
 }
 
 
@@ -149,8 +163,8 @@ void mezclar_cartas(lista_t *cartas) {
     size_t n = lista_cantidad(cartas);
     for (size_t i = n - 1; i > 0; i--) {
         size_t j = rand() % (i + 1);
-        void *tmp = lista_elemento_en_posicion(cartas, i);
-        void *otro = lista_elemento_en_posicion(cartas, j);
+        void *tmp = lista_buscar_elemento(cartas, i);
+        void *otro = lista_buscar_elemento(cartas, j);
         lista_eliminar_elemento(cartas, i);
         lista_insertar(cartas, otro, i);
         lista_eliminar_elemento(cartas, j);
@@ -171,7 +185,7 @@ void juego_crear_cartas_memoria(juego_t *juego) {
     for (int i = 0; i < 9; ) {
         size_t idx = rand() % total;
         if (!usados[idx]) {
-            struct pokemon *pk = lista_elemento_en_posicion(juego->pokedex, idx);
+            struct pokemon *pk = lista_buscar_elemento(juego->pokedex, idx);
             lista_insertar(juego->cartas, pk, lista_cantidad(juego->cartas));
             lista_insertar(juego->cartas, pk, lista_cantidad(juego->cartas)); // Duplicado
             usados[idx] = true;
@@ -180,4 +194,27 @@ void juego_crear_cartas_memoria(juego_t *juego) {
     }
     mezclar_cartas(juego->cartas);
 
+}
+/* Destruye el juego y libera toda la memoria asociada.
+ * Incluye la pokedex y el estado de la partida.
+ * 
+ * Si el juego es NULL, no hace nada.
+ */
+void juego_destruir(juego_t *juego){
+    if(!juego) return;
+
+    // Destruir la lista de pokemones (sin destruir los pokemones, eso lo hace tp1)
+    lista_destruir(juego->pokedex);
+    
+    // Destruir el hash (sin destruir los pokemones, ya están en la lista)
+    hash_destruir(juego->pokedex_por_nombre);
+    
+    // Destruir la lista de cartas (sin destruir los pokemones)
+    lista_destruir(juego->cartas);
+    
+    // Destruir la pila de historial (debería destruir las jugadas si las hay)
+    pila_destruir(juego->historial_jugadas);
+    
+    // Liberar la estructura del juego
+    free(juego);
 }
