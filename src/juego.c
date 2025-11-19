@@ -10,6 +10,14 @@
 #include "cola.h"
 #include "tp1.h"
 
+// Declaraciones adelantadas de funciones auxiliares
+static bool buscar_id_en_lista(void *elemento, void *extra);
+int comparador_pokemon_nombre(const void *a, const void *b);
+int comparador_pokemon_id(const void *a, const void *b);
+void juego_listar_ordenado(juego_t *juego,
+                           int (*comparador)(const void *, const void *),
+                           void (*accion)(pokemon_t *, void *),
+                           void *ctx);
 
 struct juego {
     lista_t *pokedex;              // Lista de todos los pokemones
@@ -142,7 +150,7 @@ size_t juego_buscar_por_nombre(juego_t *juego, const char *nombre,
     
 
 pokemon_t *juego_buscar_por_id(juego_t *juego, int id){
-    if(!juego || !id){
+    if(!juego){
         return NULL;
     }
 
@@ -167,77 +175,6 @@ void juego_listar_por_id(juego_t *juego,
     juego_listar_ordenado(juego, comparador_pokemon_id, accion, ctx);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//FUNCIONES AUXILIARES :
-
-
-
-
-static bool buscar_id_en_lista(void *elemento, void *extra) {
-    pokemon_t *pokemon = (pokemon_t *)elemento;
-    int *id_buscado = (int *)extra;
-    // Si encontramos el ID, lo guardamos en extra[1] y cortamos
-    if (pokemon && pokemon->id == *id_buscado) {
-        // Guardar el puntero al pokemon encontrado en extra[1]
-        ((pokemon_t **)extra)[1] = pokemon;
-        return false; // Cortar recorrido
-    }
-    return true; // Seguir buscando
-}
-
-
-
-
-void mezclar_cartas(lista_t *cartas) {
-    size_t n = lista_cantidad(cartas);
-    for (size_t i = n - 1; i > 0; i--) {
-        size_t j = rand() % (i + 1);
-        void *tmp = lista_buscar_elemento(cartas, i);
-        void *otro = lista_buscar_elemento(cartas, j);
-        lista_eliminar_elemento(cartas, i);
-        lista_insertar(cartas, otro, i);
-        lista_eliminar_elemento(cartas, j);
-        lista_insertar(cartas, tmp, j);
-    }
-}
-
-//aleatoriedad de cartas de pokemon 
-void juego_crear_cartas_memoria(juego_t *juego) {
-    if (!juego || lista_cantidad(juego->pokedex) < 9)
-        return;
-
-    size_t total = lista_cantidad(juego->pokedex);
-    bool usados[total];
-    memset(usados, 0, sizeof(usados)); //Establece todos los elementos del arreglo usados en cero (false).
-
-    // Selecciona 9 pokemones distintos al azar
-    for (int i = 0; i < 9; ) {
-        size_t idx = rand() % total;
-        if (!usados[idx]) {
-            struct pokemon *pk = lista_buscar_elemento(juego->pokedex, idx);
-            lista_insertar(juego->cartas, pk, lista_cantidad(juego->cartas));
-            lista_insertar(juego->cartas, pk, lista_cantidad(juego->cartas)); // Duplicado
-            usados[idx] = true;
-            i++;
-        }
-    }
-    mezclar_cartas(juego->cartas);
-
-}
 
 /* Inicia una nueva partida con pokemones aleatorios.
  * Selecciona 9 pokemones al azar y crea 18 cartas (9 pares).
@@ -275,6 +212,96 @@ bool juego_iniciar_partida(juego_t *juego, unsigned int semilla) {
     
     return true;
 }
+
+bool juego_partida_activa(juego_t *juego) {
+    if (!juego) return false;
+    
+    return (juego->cartas != NULL && lista_cantidad(juego->cartas) == TOTAL_CARTAS);
+}
+
+int juego_jugador_actual(juego_t *juego) {
+    if (!juego)
+        return 0;
+    return juego->jugador_actual;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//FUNCIONES AUXILIARES :
+
+
+
+
+static bool buscar_id_en_lista(void *elemento, void *extra) {
+    pokemon_t *pokemon = (pokemon_t *)elemento;
+    void **busqueda = (void **)extra;
+    int *id_buscado = (int *)busqueda[0];
+    
+    // Si encontramos el ID, lo guardamos en busqueda[1] y cortamos
+    if (pokemon && pokemon->id == *id_buscado) {
+        busqueda[1] = pokemon;
+        return false; // Cortar recorrido
+    }
+    return true; // Seguir buscando
+}
+
+
+
+
+void mezclar_cartas(lista_t *cartas) {
+    size_t n = lista_cantidad(cartas);
+    for (size_t i = n - 1; i > 0; i--) {
+        size_t j = (size_t)(rand() % (int)(i + 1));
+        void *tmp = lista_buscar_elemento(cartas, i);
+        void *otro = lista_buscar_elemento(cartas, j);
+        lista_eliminar_elemento(cartas, i);
+        lista_insertar(cartas, otro, i);
+        lista_eliminar_elemento(cartas, j);
+        lista_insertar(cartas, tmp, j);
+    }
+}
+
+//aleatoriedad de cartas de pokemon 
+void juego_crear_cartas_memoria(juego_t *juego) {
+    if (!juego || lista_cantidad(juego->pokedex) < 9)
+        return;
+
+    size_t total = lista_cantidad(juego->pokedex);
+    bool usados[total];
+    memset(usados, 0, sizeof(usados)); //Establece todos los elementos del arreglo usados en cero (false).
+
+    // Selecciona 9 pokemones distintos al azar
+    for (int i = 0; i < 9; ) {
+        size_t idx = (size_t)(rand() % (int)total);
+        if (!usados[idx]) {
+            struct pokemon *pk = lista_buscar_elemento(juego->pokedex, idx);
+            lista_insertar(juego->cartas, pk, lista_cantidad(juego->cartas));
+            lista_insertar(juego->cartas, pk, lista_cantidad(juego->cartas)); // Duplicado
+            usados[idx] = true;
+            i++;
+        }
+    }
+    mezclar_cartas(juego->cartas);
+
+}
+
+
 
 
 int comparador_pokemon_nombre(const void *a, const void *b) {

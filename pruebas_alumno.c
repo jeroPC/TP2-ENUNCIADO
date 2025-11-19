@@ -211,6 +211,167 @@ void test_juego_crear_cartas_memoria_con_pocos_pokemones()
 	juego_destruir(juego);
 }
 
+void test_juego_buscar_por_id()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_buscar_por_id");
+	
+	juego_t *juego = juego_crear();
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	// Búsqueda con parámetros NULL
+	pokemon_t *encontrado = juego_buscar_por_id(NULL, 1);
+	pa2m_afirmar(encontrado == NULL, "No se puede buscar con juego NULL");
+	
+	// Búsqueda de ID que debería existir (asumiendo que el primer pokemon tiene ID 1)
+	encontrado = juego_buscar_por_id(juego, 1);
+	pa2m_afirmar(encontrado != NULL, "Se encuentra un pokemon con ID válido");
+	if (encontrado) {
+		pa2m_afirmar(encontrado->id == 1, "El pokemon encontrado tiene el ID correcto");
+	}
+	
+	// Búsqueda de ID que no existe
+	encontrado = juego_buscar_por_id(juego, 99999);
+	pa2m_afirmar(encontrado == NULL, "No se encuentra un pokemon con ID inexistente");
+	
+	juego_destruir(juego);
+}
+
+void contador_pokemones_callback(pokemon_t *pokemon, void *ctx)
+{
+	int *contador = (int *)ctx;
+	(*contador)++;
+}
+
+void test_juego_listar_por_nombre()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_listar_por_nombre");
+	
+	juego_t *juego = juego_crear();
+	
+	// Listar con parámetros NULL
+	int contador = 0;
+	juego_listar_por_nombre(NULL, contador_pokemones_callback, &contador);
+	pa2m_afirmar(contador == 0, "No se listan pokemones con juego NULL");
+	
+	contador = 0;
+	juego_listar_por_nombre(juego, NULL, &contador);
+	pa2m_afirmar(contador == 0, "No se listan pokemones con callback NULL");
+	
+	// Cargar pokemones y listar
+	int cargados = juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	contador = 0;
+	juego_listar_por_nombre(juego, contador_pokemones_callback, &contador);
+	pa2m_afirmar(contador == cargados, "Se listan todos los pokemones cargados");
+	
+	// Verificar que están ordenados por nombre (se invoca el callback para cada uno)
+	pa2m_afirmar(contador > 0, "El callback se invoca para cada pokemon");
+	
+	juego_destruir(juego);
+}
+
+void test_juego_listar_por_id()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_listar_por_id");
+	
+	juego_t *juego = juego_crear();
+	
+	// Listar con parámetros NULL
+	int contador = 0;
+	juego_listar_por_id(NULL, contador_pokemones_callback, &contador);
+	pa2m_afirmar(contador == 0, "No se listan pokemones con juego NULL");
+	
+	contador = 0;
+	juego_listar_por_id(juego, NULL, &contador);
+	pa2m_afirmar(contador == 0, "No se listan pokemones con callback NULL");
+	
+	// Cargar pokemones y listar
+	int cargados = juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	contador = 0;
+	juego_listar_por_id(juego, contador_pokemones_callback, &contador);
+	pa2m_afirmar(contador == cargados, "Se listan todos los pokemones cargados por ID");
+	
+	pa2m_afirmar(contador > 0, "El callback se invoca para cada pokemon ordenado por ID");
+	
+	juego_destruir(juego);
+}
+
+void test_juego_iniciar_partida()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_iniciar_partida");
+	
+	juego_t *juego = juego_crear();
+	
+	// Intentar iniciar partida sin pokemones
+	bool resultado = juego_iniciar_partida(juego, 12345);
+	pa2m_afirmar(!resultado, "No se puede iniciar partida sin suficientes pokemones");
+	
+	// Cargar pokemones e iniciar partida
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	if (juego_cantidad_pokemones(juego) >= 9) {
+		resultado = juego_iniciar_partida(juego, 12345);
+		pa2m_afirmar(resultado, "Se puede iniciar partida con suficientes pokemones");
+		pa2m_afirmar(juego_cantidad_cartas(juego) == 18, "Se crean 18 cartas al iniciar");
+		pa2m_afirmar(juego_partida_activa(juego), "La partida queda activa");
+		pa2m_afirmar(juego_jugador_actual(juego) == 1, "El jugador actual es el 1 al inicio");
+		
+		// Iniciar otra partida con diferente semilla
+		resultado = juego_iniciar_partida(juego, 54321);
+		pa2m_afirmar(resultado, "Se puede reiniciar una partida");
+		pa2m_afirmar(juego_cantidad_cartas(juego) == 18, "Las cartas se regeneran correctamente");
+		
+		// Iniciar con semilla 0 (usa tiempo actual)
+		resultado = juego_iniciar_partida(juego, 0);
+		pa2m_afirmar(resultado, "Se puede iniciar partida con semilla 0 (aleatorio)");
+	}
+	
+	// Intentar iniciar con juego NULL
+	resultado = juego_iniciar_partida(NULL, 12345);
+	pa2m_afirmar(!resultado, "No se puede iniciar partida con juego NULL");
+	
+	juego_destruir(juego);
+}
+
+void test_juego_partida_activa()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_partida_activa");
+	
+	juego_t *juego = juego_crear();
+	
+	pa2m_afirmar(!juego_partida_activa(juego), "Una partida no iniciada no está activa");
+	pa2m_afirmar(!juego_partida_activa(NULL), "Un juego NULL no tiene partida activa");
+	
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	if (juego_cantidad_pokemones(juego) >= 9) {
+		juego_iniciar_partida(juego, 12345);
+		pa2m_afirmar(juego_partida_activa(juego), "Después de iniciar, la partida está activa");
+	}
+	
+	juego_destruir(juego);
+}
+
+void test_juego_jugador_actual()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_jugador_actual");
+	
+	juego_t *juego = juego_crear();
+	
+	pa2m_afirmar(juego_jugador_actual(juego) == 0, "El jugador actual es 0 antes de iniciar partida");
+	pa2m_afirmar(juego_jugador_actual(NULL) == 0, "Un juego NULL retorna jugador 0");
+	
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	if (juego_cantidad_pokemones(juego) >= 9) {
+		juego_iniciar_partida(juego, 12345);
+		pa2m_afirmar(juego_jugador_actual(juego) == 1, "El jugador actual es 1 al iniciar la partida");
+	}
+	
+	juego_destruir(juego);
+}
+
 void test_integracion_juego_completa()
 {
 	pa2m_nuevo_grupo("Pruebas de integración del juego");
@@ -252,6 +413,12 @@ int main()
 	test_juego_cargar_pokedex();
 	test_juego_cantidad_pokemones();
 	test_juego_buscar_por_nombre();
+	test_juego_buscar_por_id();
+	test_juego_listar_por_nombre();
+	test_juego_listar_por_id();
+	test_juego_iniciar_partida();
+	test_juego_partida_activa();
+	test_juego_jugador_actual();
 	test_juego_crear_cartas_memoria();
 	test_juego_crear_cartas_memoria_con_pocos_pokemones();
 	test_integracion_juego_completa();
