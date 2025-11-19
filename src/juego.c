@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 #include "lista.h"
 #include "pila.h"
 #include "abb.h"
@@ -195,6 +196,44 @@ void juego_crear_cartas_memoria(juego_t *juego) {
     mezclar_cartas(juego->cartas);
 
 }
+
+/* Inicia una nueva partida con pokemones aleatorios.
+ * Selecciona 9 pokemones al azar y crea 18 cartas (9 pares).
+ * 
+ * semilla: semilla para el generador aleatorio (0 = tiempo actual)
+ * 
+ * Devuelve true si se pudo iniciar la partida, false en caso de error.
+ */
+bool juego_iniciar_partida(juego_t *juego, unsigned int semilla) {
+    if (!juego || juego_cantidad_pokemones(juego) < 9)
+        return false;
+    
+    // Si semilla es 0, usa el tiempo actual (no determinístico)
+    if (semilla == 0) {
+        semilla = (unsigned int)time(NULL);
+    }
+    
+    // Inicializar el generador con la semilla
+    srand(semilla);
+    
+    // Limpiar cartas anteriores si las hay
+    lista_destruir(juego->cartas);
+    juego->cartas = lista_crear();
+    if (!juego->cartas)
+        return false;
+    
+    // Crear las cartas usando rand() internamente
+    juego_crear_cartas_memoria(juego);
+    
+    // Inicializar estado de la partida
+    juego->partida_activa = true;
+    juego->jugador_actual = 1;
+    juego->puntaje[0] = 0;
+    juego->puntaje[1] = 0;
+    
+    return true;
+}
+
 /* Destruye el juego y libera toda la memoria asociada.
  * Incluye la pokedex y el estado de la partida.
  * 

@@ -21,6 +21,7 @@ struct menu {
     opcion_menu_t *opciones; // Array dinámico de opciones
     size_t cantidad_opciones;
     size_t capacidad_opciones;
+    estilo_personalizado_t *estilo_custom; // Puntero a estilo personalizado
 };
 
 menu_t *menu_crear(const char *titulo, estilo_menu_t estilo){
@@ -40,6 +41,7 @@ menu_t *menu_crear(const char *titulo, estilo_menu_t estilo){
     menu->estilo = estilo;
     menu->cantidad_opciones = 0;
     menu->capacidad_opciones = 4; // capacidad inicial
+    menu->estilo_custom = NULL; // Sin estilo personalizado inicialmente
     menu->opciones = malloc(menu->capacidad_opciones * sizeof(opcion_menu_t));
     if (!menu->opciones) {
         free(menu->titulo);
@@ -136,6 +138,54 @@ static void mostrar_estilo_retro(menu_t *menu) {
     printf(ANSI_COLOR_GREEN "+--------------------------------------+\n" ANSI_COLOR_RESET);
 }
 
+static void mostrar_estilo_personalizado(menu_t *menu) {
+    if (!menu->estilo_custom) {
+        mostrar_estilo_minimalista(menu); // Fallback
+        return;
+    }
+    
+    estilo_personalizado_t *e = menu->estilo_custom;
+    
+    // Borde superior
+    if (e->borde_superior)
+        printf("\n%s\n", e->borde_superior);
+    
+    // Título
+    if (e->color_titulo)
+        printf("%s%s%s\n", e->color_titulo, menu->titulo, 
+               e->color_reset ? e->color_reset : ANSI_COLOR_RESET);
+    else
+        printf("%s\n", menu->titulo);
+    
+    // Separador
+    if (e->separador)
+        printf("%s\n", e->separador);
+    
+    // Opciones
+    for (size_t i = 0; i < menu->cantidad_opciones; i++) {
+        if (e->prefijo_opcion)
+            printf("%s", e->prefijo_opcion);
+        
+        if (e->color_teclas)
+            printf("%s%c%s", e->color_teclas, menu->opciones[i].tecla,
+                   e->color_reset ? e->color_reset : ANSI_COLOR_RESET);
+        else
+            printf("%c", menu->opciones[i].tecla);
+        
+        printf(") ");
+        
+        if (e->color_opciones)
+            printf("%s%s%s\n", e->color_opciones, menu->opciones[i].descripcion,
+                   e->color_reset ? e->color_reset : ANSI_COLOR_RESET);
+        else
+            printf("%s\n", menu->opciones[i].descripcion);
+    }
+    
+    // Borde inferior
+    if (e->borde_inferior)
+        printf("%s\n", e->borde_inferior);
+}
+
 
 void menu_mostrar(menu_t *menu){
     if(!menu) return;
@@ -149,6 +199,9 @@ void menu_mostrar(menu_t *menu){
             break;
         case ESTILO_RETRO:
             mostrar_estilo_retro(menu);
+            break;
+        case ESTILO_PERSONALIZADO:
+            mostrar_estilo_personalizado(menu);
             break;
         default:
             mostrar_estilo_minimalista(menu);
@@ -202,4 +255,53 @@ void menu_destruir(menu_t *menu) {
     free(menu->opciones);
     free(menu->titulo);
     free(menu);
+}
+
+/* ======== IMPLEMENTACIÓN DE ESTILOS PERSONALIZADOS ======== */
+
+estilo_personalizado_t *estilo_crear(
+    const char *borde_superior,
+    const char *borde_inferior,
+    const char *separador,
+    const char *prefijo_opcion,
+    const char *color_titulo,
+    const char *color_opciones,
+    const char *color_teclas)
+{
+    estilo_personalizado_t *estilo = malloc(sizeof(estilo_personalizado_t));
+    if (!estilo) return NULL;
+    
+    // Copiar strings (si son NULL, dejamos NULL)
+    estilo->borde_superior = borde_superior ? strdup(borde_superior) : NULL;
+    estilo->borde_inferior = borde_inferior ? strdup(borde_inferior) : NULL;
+    estilo->separador = separador ? strdup(separador) : NULL;
+    estilo->prefijo_opcion = prefijo_opcion ? strdup(prefijo_opcion) : NULL;
+    estilo->color_titulo = color_titulo ? strdup(color_titulo) : NULL;
+    estilo->color_opciones = color_opciones ? strdup(color_opciones) : NULL;
+    estilo->color_teclas = color_teclas ? strdup(color_teclas) : NULL;
+    estilo->color_reset = strdup(ANSI_COLOR_RESET);
+    
+    return estilo;
+}
+
+void estilo_destruir(estilo_personalizado_t *estilo) {
+    if (!estilo) return;
+    
+    free(estilo->borde_superior);
+    free(estilo->borde_inferior);
+    free(estilo->separador);
+    free(estilo->prefijo_opcion);
+    free(estilo->color_titulo);
+    free(estilo->color_opciones);
+    free(estilo->color_teclas);
+    free(estilo->color_reset);
+    free(estilo);
+}
+
+bool menu_establecer_estilo_personalizado(menu_t *menu, estilo_personalizado_t *estilo) {
+    if (!menu || !estilo) return false;
+    
+    menu->estilo_custom = estilo;
+    menu->estilo = ESTILO_PERSONALIZADO;
+    return true;
 }
