@@ -141,7 +141,31 @@ size_t juego_buscar_por_nombre(juego_t *juego, const char *nombre,
 }
     
 
+pokemon_t *juego_buscar_por_id(juego_t *juego, int id){
+    if(!juego || !id){
+        return NULL;
+    }
 
+    void *busqueda[2];
+    busqueda[0] = &id;
+    busqueda [1] = NULL;
+
+    lista_con_cada_elemento(juego->pokedex, buscar_id_en_lista, busqueda);
+    return (pokemon_t *)busqueda[1];
+}
+
+
+void juego_listar_por_nombre(juego_t *juego,
+                            void (*accion)(pokemon_t *, void *),
+                            void *ctx) {
+    juego_listar_ordenado(juego, comparador_pokemon_nombre, accion, ctx);
+}
+
+void juego_listar_por_id(juego_t *juego,
+                        void (*accion)(pokemon_t *, void *),
+                        void *ctx) {
+    juego_listar_ordenado(juego, comparador_pokemon_id, accion, ctx);
+}
 
 
 
@@ -159,6 +183,24 @@ size_t juego_buscar_por_nombre(juego_t *juego, const char *nombre,
 
 
 //FUNCIONES AUXILIARES :
+
+
+
+
+static bool buscar_id_en_lista(void *elemento, void *extra) {
+    pokemon_t *pokemon = (pokemon_t *)elemento;
+    int *id_buscado = (int *)extra;
+    // Si encontramos el ID, lo guardamos en extra[1] y cortamos
+    if (pokemon && pokemon->id == *id_buscado) {
+        // Guardar el puntero al pokemon encontrado en extra[1]
+        ((pokemon_t **)extra)[1] = pokemon;
+        return false; // Cortar recorrido
+    }
+    return true; // Seguir buscando
+}
+
+
+
 
 void mezclar_cartas(lista_t *cartas) {
     size_t n = lista_cantidad(cartas);
@@ -234,11 +276,52 @@ bool juego_iniciar_partida(juego_t *juego, unsigned int semilla) {
     return true;
 }
 
-/* Destruye el juego y libera toda la memoria asociada.
- * Incluye la pokedex y el estado de la partida.
- * 
- * Si el juego es NULL, no hace nada.
- */
+
+int comparador_pokemon_nombre(const void *a, const void *b) {
+    const pokemon_t *p1 = (const pokemon_t *)a;
+    const pokemon_t *p2 = (const pokemon_t *)b;
+    return strcmp(p1->nombre, p2->nombre);
+}
+
+int comparador_pokemon_id(const void *a, const void *b) {
+    const pokemon_t *p1 = (const pokemon_t *)a;
+    const pokemon_t *p2 = (const pokemon_t *)b;
+    return p1->id - p2->id;
+}
+
+void juego_listar_ordenado(juego_t *juego,
+                           int (*comparador)(const void *, const void *),
+                           void (*accion)(pokemon_t *, void *),
+                           void *ctx) {
+    if (!juego || !juego->pokedex || !accion)
+        return;
+
+    abb_t *abb = abb_crear(comparador);
+    if (!abb)
+        return;
+
+    size_t cantidad = lista_cantidad(juego->pokedex);
+    for (size_t i = 0; i < cantidad; i++) {
+        pokemon_t *poke = lista_buscar_elemento(juego->pokedex, i);
+        abb_insertar(abb, poke);
+    }
+
+    pokemon_t **vector = malloc(sizeof(pokemon_t *) * cantidad);
+    if (!vector) {
+        abb_destruir(abb);
+        return;
+    }
+    abb_vectorizar(abb, ABB_INORDEN, cantidad, (void **)vector);
+
+    for (size_t i = 0; i < cantidad; i++)
+        accion(vector[i], ctx);
+
+    free(vector);
+    abb_destruir(abb);
+}
+
+
+
 void juego_destruir(juego_t *juego){
     if(!juego) return;
 

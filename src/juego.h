@@ -205,3 +205,4 @@ enum tipo_pokemon juego_tipo_desde_string(const char *tipo_str);
 const char *juego_tipo_a_string(enum tipo_pokemon tipo);
 
 #endif // JUEGO_H
+    
