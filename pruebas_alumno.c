@@ -397,6 +397,183 @@ void test_integracion_juego_completa()
 	juego_destruir(juego);
 }
 
+void test_juego_obtener_tablero()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_obtener_tablero");
+	
+	juego_t *juego = juego_crear();
+	carta_t cartas[TOTAL_CARTAS];
+	
+	// Pruebas con parámetros inválidos
+	size_t obtenidas = juego_obtener_tablero(NULL, cartas);
+	pa2m_afirmar(obtenidas == 0, "No se puede obtener tablero con juego NULL");
+	
+	obtenidas = juego_obtener_tablero(juego, NULL);
+	pa2m_afirmar(obtenidas == 0, "No se puede obtener tablero con array NULL");
+	
+	// Prueba sin cartas creadas
+	obtenidas = juego_obtener_tablero(juego, cartas);
+	pa2m_afirmar(obtenidas == 0, "No se obtienen cartas si no hay partida iniciada");
+	
+	// Cargar pokemones e iniciar partida
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	if (juego_cantidad_pokemones(juego) >= 9) {
+		juego_iniciar_partida(juego, 12345);
+		
+		obtenidas = juego_obtener_tablero(juego, cartas);
+		pa2m_afirmar(obtenidas == TOTAL_CARTAS, "Se obtienen las 18 cartas correctamente");
+		
+		// Verificar que las cartas tienen datos válidos
+		bool todas_validas = true;
+		for (size_t i = 0; i < obtenidas; i++) {
+			if (cartas[i].pokemon == NULL) {
+				todas_validas = false;
+				break;
+			}
+		}
+		pa2m_afirmar(todas_validas, "Todas las cartas tienen un pokemon asignado");
+		
+		// Verificar que hay exactamente 9 pares (cada pokemon aparece 2 veces)
+		int pares_encontrados = 0;
+		for (size_t i = 0; i < obtenidas; i++) {
+			int cuenta = 0;
+			for (size_t j = 0; j < obtenidas; j++) {
+				if (cartas[i].pokemon == cartas[j].pokemon) {
+					cuenta++;
+				}
+			}
+			if (cuenta == 2 && i == 0) {
+				// Solo contamos una vez por cada par
+				pares_encontrados++;
+			}
+		}
+		pa2m_afirmar(pares_encontrados > 0, "Existen pares de cartas con el mismo pokemon");
+	}
+	
+	juego_destruir(juego);
+}
+
+void test_juego_seleccionar_carta()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_seleccionar_carta");
+	
+	juego_t *juego = juego_crear();
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	// Pruebas con parámetros inválidos
+	int resultado = juego_seleccionar_carta(NULL, 0);
+	pa2m_afirmar(resultado == -1, "No se puede seleccionar carta con juego NULL");
+	
+	resultado = juego_seleccionar_carta(juego, -1);
+	pa2m_afirmar(resultado == -1, "No se puede seleccionar carta con posición negativa");
+	
+	resultado = juego_seleccionar_carta(juego, TOTAL_CARTAS);
+	pa2m_afirmar(resultado == -1, "No se puede seleccionar carta fuera de rango");
+	
+	// Iniciar partida con semilla fija para pruebas determinísticas
+	if (juego_cantidad_pokemones(juego) >= 9) {
+		juego_iniciar_partida(juego, 12345);
+		
+		// Obtener el tablero para saber qué cartas hay
+		carta_t tablero[TOTAL_CARTAS];
+		juego_obtener_tablero(juego, tablero);
+		
+		// Seleccionar primera carta
+		resultado = juego_seleccionar_carta(juego, 0);
+		pa2m_afirmar(resultado == 0, "Primera carta seleccionada correctamente (retorna 0)");
+		
+		// Intentar seleccionar la misma carta
+		resultado = juego_seleccionar_carta(juego, 0);
+		pa2m_afirmar(resultado == -1, "No se puede seleccionar una carta ya descubierta");
+		
+		// Buscar la pareja de la carta en posición 0
+		int posicion_pareja = -1;
+		for (int i = 1; i < TOTAL_CARTAS; i++) {
+			if (tablero[i].pokemon == tablero[0].pokemon) {
+				posicion_pareja = i;
+				break;
+			}
+		}
+		
+		if (posicion_pareja != -1) {
+			// Seleccionar la pareja
+			int jugador_antes = juego_jugador_actual(juego);
+			int puntos_antes = juego_obtener_puntuacion(juego, jugador_antes);
+			
+			resultado = juego_seleccionar_carta(juego, posicion_pareja);
+			pa2m_afirmar(resultado == 1, "Se forma un par correctamente (retorna 1)");
+			
+			int puntos_despues = juego_obtener_puntuacion(juego, jugador_antes);
+			pa2m_afirmar(puntos_despues == puntos_antes + 1, "Se suma un punto al jugador");
+			
+			int jugador_despues = juego_jugador_actual(juego);
+			pa2m_afirmar(jugador_despues == jugador_antes, "El turno se mantiene cuando hay par");
+		}
+		
+		// Seleccionar dos cartas que NO son pareja
+		int carta1 = -1, carta2 = -1;
+		for (int i = 0; i < TOTAL_CARTAS && carta1 == -1; i++) {
+			if (tablero[i].emparejada) continue;
+			for (int j = i + 1; j < TOTAL_CARTAS; j++) {
+				if (tablero[j].emparejada) continue;
+				if (tablero[i].pokemon != tablero[j].pokemon) {
+					carta1 = i;
+					carta2 = j;
+					break;
+				}
+			}
+		}
+		
+		if (carta1 != -1 && carta2 != -1) {
+			int jugador_antes = juego_jugador_actual(juego);
+			
+			resultado = juego_seleccionar_carta(juego, carta1);
+			pa2m_afirmar(resultado == 0, "Primera carta de par incorrecto seleccionada");
+			
+			resultado = juego_seleccionar_carta(juego, carta2);
+			pa2m_afirmar(resultado == -2, "Par incorrecto retorna -2");
+			
+			int jugador_despues = juego_jugador_actual(juego);
+			pa2m_afirmar(jugador_despues != jugador_antes, "El turno cambia cuando no hay par");
+		}
+	}
+	
+	juego_destruir(juego);
+}
+
+void test_juego_obtener_puntuacion()
+{
+	pa2m_nuevo_grupo("Pruebas de juego_obtener_puntuacion");
+	
+	juego_t *juego = juego_crear();
+	
+	// Pruebas con parámetros inválidos
+	int puntos = juego_obtener_puntuacion(NULL, 1);
+	pa2m_afirmar(puntos == 0, "Juego NULL retorna 0 puntos");
+	
+	puntos = juego_obtener_puntuacion(juego, 0);
+	pa2m_afirmar(puntos == 0, "Jugador 0 (inválido) retorna 0 puntos");
+	
+	puntos = juego_obtener_puntuacion(juego, 3);
+	pa2m_afirmar(puntos == 0, "Jugador 3 (inválido) retorna 0 puntos");
+	
+	// Pruebas con partida iniciada
+	juego_cargar_pokedex(juego, "ejemplos/normal.csv");
+	
+	if (juego_cantidad_pokemones(juego) >= 9) {
+		juego_iniciar_partida(juego, 12345);
+		
+		puntos = juego_obtener_puntuacion(juego, 1);
+		pa2m_afirmar(puntos == 0, "Jugador 1 empieza con 0 puntos");
+		
+		puntos = juego_obtener_puntuacion(juego, 2);
+		pa2m_afirmar(puntos == 0, "Jugador 2 empieza con 0 puntos");
+	}
+	
+	juego_destruir(juego);
+}
+
 int main()
 {
 	pa2m_nuevo_grupo("============== PRUEBAS MENU_CREAR ===============");
@@ -422,6 +599,11 @@ int main()
 	test_juego_crear_cartas_memoria();
 	test_juego_crear_cartas_memoria_con_pocos_pokemones();
 	test_integracion_juego_completa();
+	
+	pa2m_nuevo_grupo("============== PRUEBAS NUEVAS PRIMITIVAS ===============");
+	test_juego_obtener_tablero();
+	test_juego_obtener_puntuacion();
+	test_juego_seleccionar_carta();
 
 	return pa2m_mostrar_reporte();
 }

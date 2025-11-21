@@ -225,10 +225,101 @@ int juego_jugador_actual(juego_t *juego) {
     return juego->jugador_actual;
 }
 
+int juego_obtener_puntuacion(juego_t *juego, int jugador){
+    if(!juego || jugador < 1 || jugador > 2) 
+        return 0;
+    
+    return juego->puntaje[jugador - 1];
+}
+
+size_t juego_obtener_tablero(juego_t *juego, carta_t *cartas){
+    if(!juego || !cartas) return 0;
+    if(!juego->cartas) return 0;
+    
+    lista_iterador_t *iterador = lista_iterador_crear(juego->cartas);
+    if(!iterador) return 0;
+    
+    size_t contador = 0;
+    while(lista_iterador_hay_mas_elementos(iterador)){
+        carta_t *carta = lista_iterador_obtener_actual(iterador);
+        if(carta){
+            cartas[contador] = *carta;
+            contador++;
+        }
+        lista_iterador_siguiente(iterador);
+    }
+    
+    lista_iterador_destruir(iterador);
+    return contador;
+}
 
 
 
-
+/* Intenta seleccionar una carta.
+ * Si es la primera carta, se marca como seleccionada.
+ * Si es la segunda, se verifica si forman un par.
+ * 
+ * posicion: posición de la carta (0-17)
+ * 
+ * Devuelve:
+ *  - 0: carta seleccionada correctamente (esperando segunda carta)
+ *  - 1: par formado correctamente (punto para el jugador)
+ *  - -1: error (posición inválida, carta ya emparejada, etc)
+ *  - -2: no es un par (cambio de turno)
+ */
+int juego_seleccionar_carta(juego_t *juego, int posicion){
+    if(!juego || posicion < 0 || posicion >= TOTAL_CARTAS) return -1;
+    if(!juego->cartas) return -1;
+    
+    // Obtener la carta seleccionada
+    carta_t *carta_actual = lista_buscar_elemento(juego->cartas, (size_t)posicion);
+    if(!carta_actual) return -1;
+    
+    // Verificar que la carta no esté ya emparejada o descubierta
+    if(carta_actual->emparejada || carta_actual->descubierta) return -1;
+    
+    // Contar cuántas cartas están descubiertas (pero no emparejadas)
+    int cartas_descubiertas = 0;
+    carta_t *primera_carta = NULL;
+    size_t cantidad = lista_cantidad(juego->cartas);
+    
+    for(size_t i = 0; i < cantidad; i++){
+        carta_t *carta = lista_buscar_elemento(juego->cartas, i);
+        if(carta && carta->descubierta && !carta->emparejada){
+            cartas_descubiertas++;
+            if(!primera_carta) primera_carta = carta;
+        }
+    }
+    
+    // Si hay 0 cartas descubiertas: esta es la primera
+    if(cartas_descubiertas == 0){
+        carta_actual->descubierta = true;
+        return 0; // Esperando segunda carta
+    }
+    
+    // Si hay 1 carta descubierta: esta es la segunda
+    if(cartas_descubiertas == 1 && primera_carta){
+        carta_actual->descubierta = true;
+        
+        // Verificar si forman un par (mismo pokémon)
+        if(primera_carta->pokemon == carta_actual->pokemon){
+            // Par correcto
+            primera_carta->emparejada = true;
+            carta_actual->emparejada = true;
+            juego->puntaje[juego->jugador_actual - 1]++;
+            return 1; // Par formado
+        } else {
+            // No es un par: ocultar ambas y cambiar turno
+            primera_carta->descubierta = false;
+            carta_actual->descubierta = false;
+            juego->jugador_actual = (juego->jugador_actual == 1) ? 2 : 1;
+            return -2; // No es par, cambio de turno
+        }
+    }
+    
+    // Si hay 2 o más cartas descubiertas: error de estado
+    return -1;
+}
 
 
 

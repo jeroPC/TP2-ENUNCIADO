@@ -63,3 +63,7 @@ Incluír acá las respuestas a las preguntas del enunciado (si aplica).
 cd /home/jeropc/tp2_algo2_menu/TP2-ENUNCIADO && gcc -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0 -g -o pruebas_alumno pruebas_alumno.c src/*.c -lm
 
 cd /home/jeropc/tp2_algo2_menu/TP2-ENUNCIADO && ./pruebas_alumno
+
+cd /home/jeropc/tp2_algo2_menu/TP2-ENUNCIADO
+gcc -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -O0 -g -o pruebas_alumno pruebas_alumno.c src/*.c -lm
+./pruebas_alumno

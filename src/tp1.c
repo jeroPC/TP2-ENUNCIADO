@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-const int CAPACIDAD_INICIAL = 100;
+const size_t CAPACIDAD_INICIAL = 100;
 const int LARGO_BUFFER = 1024;
 const int TOTAL_POKEMONES = 6;
 
