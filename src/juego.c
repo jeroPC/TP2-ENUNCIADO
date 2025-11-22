@@ -18,6 +18,10 @@ void juego_listar_ordenado(juego_t *juego,
                            int (*comparador)(const void *, const void *),
                            void (*accion)(pokemon_t *, void *),
                            void *ctx);
+static int manejar_primera_carta(carta_t *carta_actual);
+static int manejar_segunda_carta(juego_t *juego, carta_t *primera_carta, carta_t *carta_actual);
+static int procesar_par_correcto(juego_t *juego, carta_t *primera_carta, carta_t *carta_actual);
+static int procesar_par_incorrecto(juego_t *juego, carta_t *primera_carta, carta_t *carta_actual);
 
 struct juego {
     lista_t *pokedex;              // Lista de todos los pokemones
@@ -293,28 +297,12 @@ int juego_seleccionar_carta(juego_t *juego, int posicion){
     
     // Si hay 0 cartas descubiertas: esta es la primera
     if(cartas_descubiertas == 0){
-        carta_actual->descubierta = true;
-        return 0; // Esperando segunda carta
+        return manejar_primera_carta(carta_actual);
     }
     
     // Si hay 1 carta descubierta: esta es la segunda
     if(cartas_descubiertas == 1 && primera_carta){
-        carta_actual->descubierta = true;
-        
-        // Verificar si forman un par (mismo pokémon)
-        if(primera_carta->pokemon == carta_actual->pokemon){
-            // Par correcto
-            primera_carta->emparejada = true;
-            carta_actual->emparejada = true;
-            juego->puntaje[juego->jugador_actual - 1]++;
-            return 1; // Par formado
-        } else {
-            // No es un par: ocultar ambas y cambiar turno
-            primera_carta->descubierta = false;
-            carta_actual->descubierta = false;
-            juego->jugador_actual = (juego->jugador_actual == 1) ? 2 : 1;
-            return -2; // No es par, cambio de turno
-        }
+        return manejar_segunda_carta(juego, primera_carta, carta_actual);
     }
     
     // Si hay 2 o más cartas descubiertas: error de estado
@@ -335,6 +323,8 @@ int juego_seleccionar_carta(juego_t *juego, int posicion){
 
 
 //FUNCIONES AUXILIARES :
+
+
 
 
 
@@ -438,6 +428,41 @@ void juego_listar_ordenado(juego_t *juego,
     abb_destruir(abb);
 }
 
+/* Maneja la selección de la primera carta */
+static int manejar_primera_carta(carta_t *carta_actual) {
+    carta_actual->descubierta = true;
+    return 0; // Esperando segunda carta
+}
+
+/* Maneja la selección de la segunda carta */
+static int manejar_segunda_carta(juego_t *juego, carta_t *primera_carta, carta_t *carta_actual) {
+    carta_actual->descubierta = true;
+    
+    // Verificar si forman un par (mismo pokémon)
+    if(primera_carta->pokemon == carta_actual->pokemon){
+        return procesar_par_correcto(juego, primera_carta, carta_actual);
+    } else {
+        return procesar_par_incorrecto(juego, primera_carta, carta_actual);
+    }
+}
+
+
+
+/* Procesa un par correcto: marca como emparejadas y suma punto */
+static int procesar_par_correcto(juego_t *juego, carta_t *primera_carta, carta_t *carta_actual) {
+    primera_carta->emparejada = true;
+    carta_actual->emparejada = true;
+    juego->puntaje[juego->jugador_actual - 1]++;
+    return 1; // Par formado
+}
+
+/* Procesa un par incorrecto: oculta cartas y cambia turno */
+static int procesar_par_incorrecto(juego_t *juego, carta_t *primera_carta, carta_t *carta_actual) {
+    primera_carta->descubierta = false;
+    carta_actual->descubierta = false;
+    juego->jugador_actual = (juego->jugador_actual == 1) ? 2 : 1;
+    return -2; // No es par, cambio de turno
+}
 
 
 void juego_destruir(juego_t *juego){
