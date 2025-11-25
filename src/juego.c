@@ -77,7 +77,6 @@ bool insertar_pokemon_en_juego(struct pokemon *pokemon, void *contexto)
 		return false;
 	}
 
-	// Crear una copia del pokemon en lugar de usar el puntero original
 	struct pokemon *copia = malloc(sizeof(struct pokemon));
 	if (!copia)
 		return false;
@@ -483,7 +482,6 @@ void juego_destruir(juego_t *juego)
 	if (!juego)
 		return;
 
-	// Liberar todos los pokemones copiados
 	if (juego->pokedex) {
 		size_t cantidad = lista_cantidad(juego->pokedex);
 		for (size_t i = 0; i < cantidad; i++) {
@@ -570,7 +568,7 @@ const char *juego_tipo_a_string(enum tipo_pokemon tipo)
 	}
 }
 
-//FUNCIONES AUXILIARES :
+// FUNCIONES AUXILIARES 
 
 static bool buscar_id_en_lista(void *elemento, void *extra)
 {

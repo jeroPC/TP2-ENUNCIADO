@@ -416,21 +416,42 @@ Implementé **copias profundas** de cada pokemon, asegurándome de que el juego 
 
 ### 4. Problema: Mezcla Aleatoria de Cartas (Fisher-Yates)
 
-**Dificultad:** Implementar Fisher-Yates correctamente con una lista enlazada (no array).
+**Objetivo:** Mezclar aleatoriamente las 18 cartas del juego de memoria de forma eficiente.
 
-- Fisher-Yates requiere acceso aleatorio por índice, pero las listas enlazadas tienen acceso O(n).
+#### **¿Por qué Fisher-Yates y no Burbujeo?**
 
-**Solución:**
-1. Obtener tamaño de la lista (18 cartas)
-2. Para cada posición i de 17 a 1:
-   - Generar índice aleatorio j entre 0 y i
-   - Extraer elemento en posición i
-   - Extraer elemento en posición j  
-   - Insertar elemento i en posición j
-   - Insertar elemento j en posición i
-3. Actualizar posiciones de todas las cartas
+**Alternativa descartada: Burbujeo con números aleatorios**
+```c
 
-**Complejidad:** O(n²) debido al acceso secuencial de listas, pero aceptable para n=18
+for (i = 0; i < n; i++)
+    carta[i]->random = rand();
+
+
+for (i = 0; i < n-1; i++)
+    for (j = 0; j < n-i-1; j++)
+        if (carta[j]->random > carta[j+1]->random)
+            intercambiar(carta[j], carta[j+1]);
+```
+**Problema:** Estamos usando un algoritmo de ordenamiento O(n²) para resolver un problema de mezcla que puede hacerse en O(n).
+
+**Solución elegida: Fisher-Yates con array auxiliar**
+
+**Dificultad:** Fisher-Yates requiere acceso aleatorio por índice, pero las listas enlazadas tienen acceso O(n).
+
+**Implementación:**
+1. Copiar punteros de la lista a un array temporal → O(n)
+2. Aplicar Fisher-Yates sobre el array:
+
+   ```c
+   for (i = n - 1; i > 0; i--) {
+       j = rand() % (i + 1);
+       intercambiar(array[i], array[j]);  
+   }
+   ```
+3. Vaciar la lista e reinsertar en el nuevo orden → O(n)
+4. Actualizar posiciones de todas las cartas → O(n)
+
+**Complejidad:** O(n) - Fisher-Yates realiza n intercambios, cada uno en O(1) gracias al array auxiliar.
 
 ---
 

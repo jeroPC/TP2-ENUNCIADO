@@ -3,25 +3,23 @@
 
 #include <stdbool.h>
 
-
 typedef enum {
 	ESTILO_MINIMALISTA = 0,
 	ESTILO_BORDES = 1,
 	ESTILO_RETRO = 2,
-	ESTILO_PERSONALIZADO = 99, 
+	ESTILO_PERSONALIZADO = 99,
 	TOTAL_ESTILOS = 3
 } estilo_menu_t;
 
-
 typedef struct estilo_personalizado {
-	char *borde_superior; 
-	char *borde_inferior; 
-	char *separador; 
-	char *prefijo_opcion; 
-	char *color_titulo; 
-	char *color_opciones; 
-	char *color_teclas; 
-	char *color_reset; 
+	char *borde_superior;
+	char *borde_inferior;
+	char *separador;
+	char *prefijo_opcion;
+	char *color_titulo;
+	char *color_opciones;
+	char *color_teclas;
+	char *color_reset;
 } estilo_personalizado_t;
 
 typedef struct menu menu_t;
