@@ -22,7 +22,7 @@ gcc -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0 -g -o tp2 tp
 ./tp2
 ```
 
-**Opción 2: Con archivo precargado** (Recomendado)
+**Opción 2: Con archivo precargado** 
 ```bash
 ./tp2 ejemplos/normal.csv
 ```
@@ -47,6 +47,7 @@ Al iniciar, verás el **MENÚ PRINCIPAL** con las siguientes opciones:
 ║ J) Jugar (semilla aleatoria)         ║
 ║ S) Jugar con semilla                 ║
 ║ E) Cambiar estilo de menú            ║
+║ X) X) Crear tu propio estilo         ║
 ║ Q) Salir                             ║
 ╚══════════════════════════════════════╝
 ```
@@ -86,6 +87,7 @@ ID,Nombre,Tipo,Ataque,Defensa,Velocidad
 - `FUEG` - Fuego
 - `PLAN` - Planta
 - `AGUA` - Agua
+- `FANT` - Fantasma
 - `NORM` - Normal
 
 ### Pasos:
@@ -111,7 +113,7 @@ Permite buscar pokemones específicos en la Pokedex cargada.
 
 1. Presiona **N** en el submenú
 2. Verás el prompt: `Ingresa el nombre (o parte del nombre):`
-3. Escribe el nombre o parte del nombre que buscas
+3. escribí el nombre o parte del nombre que buscas
 4. Presiona **ENTER**
 
 ### Ejemplos de búsqueda:
@@ -123,7 +125,7 @@ Selecciona una opción: N
 ═══ BUSCAR POR NOMBRE ═══
 
 Ingresa el nombre (o parte del nombre): ABC
-                                         ↑ escribes ABC
+                                         ↑ escribis ABC
 ```
 **Resultado:** Muestra ABC, ABCD, ABCDE, ABCDEF, etc.
 
@@ -296,7 +298,7 @@ El juego tiene 3 estilos visuales:
 ### 1. ESTILO_BORDES (Por defecto)
 ```
 ╔══════════════════════════════════════╗
-║ MENÚ PRINCIPAL - POKEMON MEMORY     ║
+║ MENÚ PRINCIPAL - POKEMON MEMORY      ║
 ╠══════════════════════════════════════╣
 ║ C) Cargar archivo                    ║
 ╚══════════════════════════════════════╝
@@ -313,13 +315,11 @@ El juego tiene 3 estilos visuales:
 
 ### 3. ESTILO_MINIMALISTA
 ```
-MENÚ PRINCIPAL - POKEMON MEMORY
 
-C) Cargar archivo
-B) Buscar pokemon
-```
+** Presiona **E** para rotar entre los 3 estilos.
 
-Presiona **E** para rotar entre los 3 estilos.
+
+** Presiona **X** para crear tu propio estilo!!
 
 ---
 
@@ -329,32 +329,18 @@ Presiona **E** para rotar entre los 3 estilos.
 - **Memoriza las posiciones:** Recuerda dónde aparecieron los pokemones que viste
 - **Observa al rival:** Cuando tu oponente voltea cartas, memoriza también esas posiciones
 
-### 🎯 Estrategia
-- **Primera ronda:** Al inicio, explora el tablero volteando cartas en diferentes zonas
-- **Aprovecha errores:** Si tu oponente voltea cartas sin hacer pareja, úsalo a tu favor
-- **Prioriza certezas:** Si sabes dónde está un par, selecciónalo de inmediato
-
-### ⚡ Trucos
-- **Esquinas primero:** Algunos jugadores prefieren empezar por las esquinas del tablero
-- **Patrón sistemático:** Explora de forma ordenada (ej: de izquierda a derecha)
-- **Juega con semilla:** Para practicar, usa la misma semilla varias veces
-
 ### 🎮 Controles Importantes
-- **Búsqueda por nombre:** Presiona N, luego escribe el nombre cuando aparezca el prompt
+- **Búsqueda por nombre:** Presiona N, luego escribí el nombre cuando aparezca el prompt
 - **Ver todos los pokemones:** Presiona N + ENTER sin escribir nada
-- **Búsqueda parcial:** Escribe solo parte del nombre (ej: "AB" encuentra ABC, ABCD, etc.)
+- **Búsqueda parcial:** escribí solo parte del nombre (ej: "AB" encuentra ABC, ABCD, etc.)
 - **Navegación:** Usa la tecla A para volver atrás en cualquier submenú
 - **Estilos:** Cambia el estilo visual con E para encontrar tu preferido
 
 ---
 
-## 🛠️ Solución de Problemas
 
-### ❌ "Error al cargar el archivo"
-- Verifica que la ruta sea correcta
-- Asegúrate de que el archivo exista
-- Revisa que el formato CSV sea válido
-- **Recomendación:** Usa el archivo como argumento al ejecutar: `./tp2 ejemplos/largo.csv`
+
+## 💡 REQUISITOS
 
 ### ❌ "Se necesitan al menos 9 pokemones para jugar"
 - El archivo debe tener mínimo 9 pokemones
@@ -369,12 +355,6 @@ Presiona **E** para rotar entre los 3 estilos.
 - No puedes seleccionar una carta ya emparejada (con ✓✓)
 - No puedes seleccionar la misma carta dos veces en un turno
 
-### ⚠️ "No se encontraron pokemones con ese nombre"
-- Verifica que escribiste el nombre correctamente
-- La búsqueda es sensible a mayúsculas/minúsculas
-- Los pokemones en `largo.csv` tienen nombres como: A, AB, ABC, ABCD, ABCDE, etc.
-- Para ver todos los pokemones, presiona N y luego ENTER (sin escribir nada)
-
 ---
 
 ## 📊 Archivos de Ejemplo
@@ -385,7 +365,7 @@ El juego incluye 2 archivos de ejemplo:
 - **5 pokemones:** Pikachu, Charmander, Bulbasaur, Squirtle, Jigglypuff
 - **Uso:** Pruebas básicas (NO suficiente para jugar - necesita 9)
 
-### `ejemplos/largo.csv` ⭐ **RECOMENDADO**
+### `ejemplos/largo.csv` 
 - **15 pokemones** con nombres variados (A, AB, ABC, ABCD, etc.)
 - **Uso:** Partidas completas del juego (suficiente para jugar)
 
@@ -396,43 +376,39 @@ El juego incluye 2 archivos de ejemplo:
 ### Sesión de juego paso a paso:
 
 ```bash
-# 1. Ejecutar el juego
+** 1. Ejecutar el juego
 ./tp2 ejemplos/largo.csv
 
-# 2. En el menú principal
+** 2. En el menú principal
 ✓ Archivo cargado: 15 pokemones
 
-# Presionar M → I (para ver la lista de pokemones por ID)
-# Presionar A (volver al menú principal)
+** Presionar M → I (para ver la lista de pokemones por ID)
+** Presionar A (volver al menú principal)
 
-# 3. Presionar J (jugar con semilla aleatoria)
+** 3. Presionar J (jugar con semilla aleatoria)
 
-# 4. Jugador 1 selecciona carta 0
+** 4. Jugador 1 selecciona carta 0
 Selecciona una carta (0-17): 0
 → Primera carta seleccionada
 
-# 5. Jugador 1 selecciona carta 5
+** 5. Jugador 1 selecciona carta 5
 Selecciona una carta (0-17): 5
 ✗ No es un par. Turno del Jugador 2
 
-# 6. Jugador 2 selecciona carta 1
+** 6. Jugador 2 selecciona carta 1
 Selecciona una carta (0-17): 1
 → Primera carta seleccionada
 
-# 7. Jugador 2 selecciona carta 7
+** 7. Jugador 2 selecciona carta 7
 Selecciona una carta (0-17): 7
 ✓ ¡Par encontrado! El Jugador 2 gana un punto
 
-# ... continuar hasta encontrar todos los pares ...
+** ... continuar hasta encontrar todos los pares ...
 
-# 8. Fin del juego
-PUNTUACIÓN FINAL:
-  Jugador 1: 4 puntos
-  Jugador 2: 5 puntos
 
-🏆 ¡GANADOR: Jugador 2!
+🏆 ¡GANADOR: Jugador 1 / 2!
 
-# 9. Presionar Q para salir
+
 ¡Gracias por jugar! Hasta pronto.
 ```
 
@@ -456,7 +432,3 @@ PUNTUACIÓN FINAL:
 
 
 ---
-
-* TP2 - Algoritmos y Programación II  
-**Autor:** (jeronimo perez cordoba)  111939  
-**Fecha:** Noviembre 2025

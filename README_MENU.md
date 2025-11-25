@@ -1,8 +1,8 @@
-# Prueba del TDA Menú - TP2 ALGO2
+# TDA Menú - TP2  - JERONIMO PEREZ CORDOBA
 
 ## Descripción
 
-Este programa demuestra el funcionamiento completo del TDA (Tipo de Dato Abstracto) Menú implementado para el TP2.
+Este programa demuestra el funcionamiento completo del TDA Menú implementado para el TP2.
 
 ## Funcionalidades Probadas
 
@@ -23,11 +23,9 @@ Este programa demuestra el funcionamiento completo del TDA (Tipo de Dato Abstrac
 - `ESTILO_MINIMALISTA`: Menú simple sin decoraciones
 - `ESTILO_BORDES`: Menú con bordes usando caracteres Unicode
 - `ESTILO_RETRO`: Menú estilo retro con caracteres ASCII
-- `ESTILO_PERSONALIZADO`: Estilos creados por el usuario sin modificar menu.c
+- `ESTILO_PERSONALIZADO` (PRECIONANDO TECLA X): Estilos creados por el usuario sin modificar menu.c
 - Cambio dinámico de estilo durante la ejecución
 
-#### **Estilos Personalizados**
-El TDA Menú permite crear estilos completamente personalizados **sin modificar el código del menú**. Ver [ESTILOS_PERSONALIZADOS.md](ESTILOS_PERSONALIZADOS.md) para documentación completa y ejemplos.
 
 ### 5. **Acciones Implementadas**
 - `S`: Saludar (usa contexto externo para mostrar el nombre)
@@ -110,19 +108,3 @@ tp2.c
     ├── Ejecución del menú
     └── Limpieza de memoria
 ```
-
-## Notas Técnicas
-
-- **Parámetros no usados**: Los warnings sobre parámetros no usados son normales, ya que la firma de las funciones debe ser consistente con `accion_menu_t`
-- **Lectura de entrada**: Se usa `getchar()` para limpiar el buffer y esperar confirmación del usuario
-- **Colores**: Los colores se definen en `src/ansi.h`
-
-## Problemas Conocidos
-
-Si notas problemas con el buffer de entrada (el menú se ejecuta dos veces), puede ser debido a:
-- Caracteres de nueva línea (`\n`) que quedan en el buffer
-- En ese caso, revisa la función `menu_ejecutar()` en `src/menu.c`
-
-## Autor
-
-Proyecto del TP2 de Algoritmos y Programación II

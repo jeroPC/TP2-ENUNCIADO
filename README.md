@@ -4,7 +4,7 @@
 
 # TP2
 
-## Repositorio de (Nombre Apellido) - (Padrón) - (Mail)
+## Repositorio de (JERONIMO PEREZ CORDOBA) - (111939) - (JEPEREZC@FI.UBA.AR)
 
 - Para compilar:
 
@@ -86,7 +86,7 @@ El menú se implementa con un array dinámico de opciones que crece según sea n
 
 El menú soporta navegación jerárquica mediante submenús, permitiendo crear estructuras complejas de navegación.
 
-
+**Para una demostración completa del TDA Menú con ejemplos de uso, contextos y estilos personalizados, consulta:** [README_MENU.md](README_MENU.md)
 
 <div align="center">
 <img width="70%" src="img/flujomenu.svg">
@@ -153,6 +153,10 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 ---
 
 ### Primitivas de Partida
+
+
+**Para una demostración completa de COMO JUGAR con ejemplos de uso ETC consulta:** [como_jugar.md](como_jugar.md)
+---
 
 **bool juego_iniciar_partida()**
 - Inicia una nueva partida con al menos 9 pokemones
