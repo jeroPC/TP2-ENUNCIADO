@@ -282,12 +282,6 @@ El juego tiene 3 estilos visuales diferentes para el menú:
 
 ---
 
-### ESTILOS:
-
-- Presiona **E** para rotar entre los 3 estilos
-- Presiona **X** para crear tu propio estilo
-
----
 
 ## 💡 Estrategia y Consejos
 
