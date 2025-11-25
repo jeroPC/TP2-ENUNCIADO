@@ -267,7 +267,7 @@ Inicialmente, cuando cargábamos pokemones desde el archivo CSV usando `tp1_leer
 ```c
 tp1_t *tp1 = tp1_leer_archivo("pokemones.csv");
 tp1_con_cada_pokemon(tp1, insertar_pokemon_en_juego, juego);
-tp1_destruir(tp1);  // Libera la memoria de los pokemones
+tp1_destruir(tp1);  
 ```
 
 **¿Qué mostraba Valgrind?**
