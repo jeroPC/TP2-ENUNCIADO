@@ -228,12 +228,12 @@ Cuando sea tu turno:
 
 Durante el juego verás un registro de las últimas jugadas:
 
-```
+
 ÚLTIMAS JUGADAS:
   J1: Cartas 5-12 → Pikachu (Par encontrado)
   J2: Cartas 3-8 → Charmander (No coinciden)
   J1: Cartas 1-14 → Bulbasaur (Par encontrado)
-```
+
 
 ### 5. Fin de la Partida
 
