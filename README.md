@@ -414,7 +414,7 @@ Implementé **copias profundas** de cada pokemon, asegurándome de que el juego 
 
 **Dificultad:** Implementar Fisher-Yates correctamente con una lista enlazada (no array).
 
-**Desafío:** Fisher-Yates requiere acceso aleatorio por índice, pero las listas enlazadas tienen acceso O(n).
+- Fisher-Yates requiere acceso aleatorio por índice, pero las listas enlazadas tienen acceso O(n).
 
 **Solución:**
 1. Obtener tamaño de la lista (18 cartas)
