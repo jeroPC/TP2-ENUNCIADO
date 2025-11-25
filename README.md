@@ -47,11 +47,11 @@ El TP2 implementa un juego de memoria (memotest) de pokemones con un sistema de 
 
 ### Justificación de Operaciones del TDA Menú
 
-El TDA Menú fue diseñado para ser **flexible, reutilizable y fácil de usar**. Las operaciones incluidas responden a necesidades específicas del proyecto:
+El TDA Menú fue diseñado para ser **flexible y reutilizable**
 
 - **`menu_crear()`**: Permite inicializar un menú con título y estilo. Es fundamental para crear la estructura base antes de agregar opciones.
 
-- **`menu_agregar_opcion()`**: Núcleo del TDA. Permite asociar teclas a acciones o submenús. La flexibilidad de aceptar callbacks o submenús (pero no ambos) permite crear tanto menús simples como jerarquías complejas de navegación.
+- **`menu_agregar_opcion()`**: Permite asociar teclas a acciones o submenús. La flexibilidad de aceptar callbacks(contexto) o submenús (pero no ambos) permite crear tanto menús simples como jerarquías complejas de navegación.
 
 - **`menu_cambiar_estilo()` y `menu_obtener_estilo()`**: Permiten personalizar la presentación visual sin modificar la lógica del menú. Útil para adaptar la interfaz a preferencias del usuario o contextos diferentes.
 
@@ -80,7 +80,7 @@ Estas primitivas cubren el ciclo completo: **creación, configuración, ejecuci�
 - Puede tener una acción (callback) o un submenú, pero no ambos
 - Si la tecla ya existe, reemplaza la opción anterior
 - El array de opciones se expande dinámicamente según sea necesario
-- **Complejidad**: O(m) en el peor caso, donde m es la cantidad de opciones actuales (buscar tecla existente + posible realloc). O(1) amortizado para agregar al final
+- **Complejidad**: O(n) en el peor caso, donde n es la cantidad de opciones actuales (buscar tecla existente + posible realloc). O(1) amortizado para agregar al final
 
 **enum *estilo_menu menu_obtener_estilo()**
 - Retorna el estilo actual del menú
@@ -96,7 +96,7 @@ Estas primitivas cubren el ciclo completo: **creación, configuración, ejecuci�
 - Libera toda la memoria asociada al menú
 - Destruye recursivamente los submenús
 - No libera los contextos de usuario (`ctx`)
-- **Complejidad**: O(m × k) donde m es la cantidad total de opciones y k es la profundidad máxima de submenús (recursión)
+- **Complejidad**: O(n × k) donde n es la cantidad total de opciones y k es la profundidad máxima de submenús (recursión)
 
 ### Funcionamiento del Sistema de Menús
 
@@ -106,9 +106,11 @@ El menú se implementa con un array dinámico de opciones que crece según sea n
 - Una acción (función callback) o un submenú (pero no ambos)
 - Un contexto de usuario que se pasa a la acción
 
-El menú soporta navegación jerárquica mediante submenús, permitiendo crear estructuras complejas de navegación.
-
+*********************
 **Para una demostración completa del TDA Menú con ejemplos de uso, contextos y estilos personalizados, consulta:** [README_MENU.md](README_MENU.md)
+
+*********************
+
 
 <div align="center">
 <img width="70%" src="img/flujomenu.svg">
@@ -176,8 +178,11 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 
 ### Primitivas de Partida
 
+**********************************
 
 **Para una demostración completa de COMO JUGAR con ejemplos de uso ETC consulta:** [como_jugar.md](como_jugar.md)
+
+**********************************
 ---
 
 **bool juego_iniciar_partida()**
@@ -196,8 +201,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 - Verifica si hay una partida en curso (con 18 cartas en el tablero)
 - **Complejidad**: O(1)
 
-**
- juego_jugador_actual()**
+**juego_jugador_actual()**
 - Retorna el jugador actual (1 o 2)
 - Retorna 0 si no hay partida activa
 - **Complejidad**: O(1)
@@ -233,7 +237,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 **size_t *juego_obtener_jugadas_jugador()**
 - Obtiene las últimas N jugadas de un jugador específico
 - Filtra el historial por el jugador solicitado
-- **Complejidad**: O(H) donde H es el tamaño total del historial (debe recorrerlo para filtrar)
+- **Complejidad**: O(n) donde n es el tamaño total del historial (debe recorrerlo para filtrar)
 
 ---
 **juego_partida_terminada()**
@@ -400,7 +404,7 @@ tp1_destruir(tp1);
 
 ####  La Solución: Copia Profunda 
 
-**¿Cómo lo solucione?**
+**¿Cómo lo solucioné?**
 Implementé **copias profundas** de cada pokemon, asegurándome de que el juego tenga su **propia memoria independiente**
 
 **¿Qué implica hacer una copia profunda?**
