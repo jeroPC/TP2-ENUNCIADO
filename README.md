@@ -430,24 +430,5 @@ Implementé **copias profundas** de cada pokemon, asegurándome de que el juego 
 
 ---
 
-### 5. Problema: Validación de Cartas Seleccionadas
-
-**Dificultad:** Manejar casos borde al seleccionar cartas:
-- Carta ya emparejada
-- Misma carta dos veces
-- Posición inválida
-- Seleccionar sin partida activa
-
-**Solución: Validaciones en cascada:**
-```c
-if (!juego->partida_activa) return ERROR_SIN_PARTIDA;
-if (posicion >= 18) return ERROR_POSICION_INVALIDA;
-if (carta->emparejada) return ERROR_CARTA_YA_EMPAREJADA;
-if (primera_carta && primera_carta->posicion == posicion) 
-    return ERROR_MISMA_CARTA;
-```
-
----
-
 
 
