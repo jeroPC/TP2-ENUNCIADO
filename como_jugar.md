@@ -10,22 +10,32 @@
 
 ### Compilar el juego
 
+Ejecuta en la terminal:
+
+```bash
 cd /home/jeropc/tp2_algo2_menu/TP2-ENUNCIADO
 gcc -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0 -g -o tp2 tp2.c src/*.c -lm
+```
 
 ### Ejecutar el juego
 
 **Opción 1: Sin archivo precargado**
 
+```bash
 ./tp2
+```
 
 **Opción 2: Con archivo precargado** 
 
+```bash
 ./tp2 ejemplos/normal.csv
+```
 
 o
 
+```bash
 ./tp2 ejemplos/largo.csv
+```
 
 ---
 
@@ -33,18 +43,14 @@ o
 
 Al iniciar, verás el **MENÚ PRINCIPAL** con las siguientes opciones:
 
-╔══════════════════════════════════════╗
-║ MENÚ PRINCIPAL - POKEMON MEMORY      ║
-╠══════════════════════════════════════╣
-║ C) Cargar archivo                    ║
-║ B) Buscar pokemon                    ║
-║ M) Mostrar pokedex                   ║
-║ J) Jugar (semilla aleatoria)         ║
-║ S) Jugar con semilla                 ║
-║ E) Cambiar estilo de menú            ║
-║ X) X) Crear tu propio estilo         ║
-║ Q) Salir                             ║
-╚══════════════════════════════════════╝
+- **C)** Cargar archivo
+- **B)** Buscar pokemon
+- **M)** Mostrar pokedex
+- **J)** Jugar (semilla aleatoria)
+- **S)** Jugar con semilla
+- **E)** Cambiar estilo de menú
+- **X)** Crear tu propio estilo
+- **Q)** Salir
 
 ### ⌨️ Opciones del Menú
 
@@ -66,13 +72,17 @@ Antes de jugar, necesitas cargar pokemones desde un archivo CSV.
 
 ### Formato del archivo CSV:
 
+```
 ID,Nombre,Tipo,Ataque,Defensa,Velocidad
+```
 
 ### Ejemplo:
 
+```
 1,Pikachu,ELEC,55,40,90
 2,Charmander,FUEG,52,43,65
 3,Bulbasaur,PLAN,49,49,45
+```
 
 ### Tipos válidos:
 - `ELEC` - Eléctrico
@@ -112,30 +122,27 @@ Permite buscar pokemones específicos en la Pokedex cargada.
 
 **Buscar pokemones con "ABC":**
 
-Selecciona una opción: N
+1. Selecciona la opción **N**
+2. Verás: `Ingresa el nombre (o parte del nombre):`
+3. Escribe: `ABC`
+4. Presiona ENTER
 
-═══ BUSCAR POR NOMBRE ═══
-
-Ingresa el nombre (o parte del nombre): ABC
-                                     ↑ escribis ABC
-
-**Resultado:** Muestra ABC, ABCD, ABCDE, ABCDEF, etc.
+**Resultado:** Muestra todos los pokemones que contengan "ABC" (ABC, ABCD, ABCDE, ABCDEF, etc.)
 
 **Ver todos los pokemones:**
 
-Ingresa el nombre (o parte del nombre): [presiona ENTER sin escribir nada]
+- Simplemente presiona ENTER sin escribir nada cuando te pida el nombre
 
 **Resultado:** Muestra todos los 15 pokemones
 
 ### Búsqueda por ID:
 
-Selecciona una opción: I
+1. Selecciona la opción **I**
+2. Verás: `Ingresa el ID:`
+3. Escribe el número del ID (ejemplo: `5`)
+4. Presiona ENTER
 
-═══ BUSCAR POR ID ═══
-
-Ingresa el ID: 5
-
-**Resultado:** Muestra el pokemon con ID 5
+**Resultado:** Muestra el pokemon con ese ID específico
 
 ---
 
@@ -150,8 +157,10 @@ Lista todos los pokemones cargados.
 
 ### Formato de salida:
 
+```
 [ID:   1] Pikachu         | Tipo: ELEC | ATK:  55 | DEF:  40 | VEL:  90
 [ID:   2] Charmander      | Tipo: FUEG | ATK:  52 | DEF:  43 | VEL:  65
+```
 
 ---
 
@@ -179,72 +188,67 @@ Inicia una partida con pokemones seleccionados aleatoriamente.
 
 ### 1. Tablero Inicial
 
-Al comenzar, verás:
+Al comenzar, verás el estado del juego con:
 
-╔═══════════════════════════════════════╗
-║     JUEGO DE MEMORIA POKEMON          ║
-╠═══════════════════════════════════════╣
-║  Jugador 1:  0 pts | Jugador 2:  0 pts ║
-║  Turno: Jugador 1                      ║
-╚═══════════════════════════════════════╝
-
-╔════════════════════ TABLERO ════════════════════╗
-║ [ 0][ 1][ 2][ 3][ 4][ 5] ║
-║ [ 6][ 7][ 8][ 9][10][11] ║
-║ [12][13][14][15][16][17] ║
-╚═════════════════════════════════════════════════╝
+- **Puntuación:** Jugador 1: 0 pts | Jugador 2: 0 pts
+- **Turno actual:** Jugador 1
+- **Tablero:** 18 cartas numeradas del 0 al 17, organizadas en 3 filas
+  - Fila 1: cartas 0-5
+  - Fila 2: cartas 6-11
+  - Fila 3: cartas 12-17
 
 ### 2. Seleccionar Primera Carta
 
-Selecciona una carta (0-17): 5
-→ Primera carta seleccionada
+Cuando sea tu turno:
 
-El tablero mostrará la carta descubierta:
-
-║ [ 0][ 1][ 2][ 3][ 4]Pik ║
+1. Verás el mensaje: `Selecciona una carta (0-17):`
+2. Escribe un número (ejemplo: `5`)
+3. Presiona ENTER
+4. Verás el mensaje: `Primera carta seleccionada`
+5. El tablero mostrará la carta descubierta (ejemplo: si era Pikachu, verás "Pik" en esa posición)
 
 ### 3. Seleccionar Segunda Carta
 
-Selecciona una carta (0-17): 12
+1. Selecciona otra carta diferente (ejemplo: `12`)
+2. Presiona ENTER
 
-**Si coinciden:**
+**Si las cartas coinciden (mismo pokemon):**
 
-✓ ¡Par encontrado! El Jugador 1 gana un punto
-
-Las cartas quedan marcadas: ✓✓
+- Verás: `¡Par encontrado! El Jugador X gana un punto`
+- Las cartas quedan marcadas permanentemente
+- El mismo jugador juega otra vez
 
 **Si NO coinciden:**
 
-✗ No es un par. Turno del Jugador 2
-
-Las cartas se voltean nuevamente
+- Verás: `No es un par. Turno del Jugador X`
+- Las cartas se voltean de nuevo
+- Pasa el turno al otro jugador
 
 ### 4. Historial de Jugadas
 
-Durante el juego verás las últimas jugadas:
+Durante el juego verás un registro de las últimas jugadas:
 
-═══ ÚLTIMAS JUGADAS ═══
-  J1: Cartas 5-12 → Pikachu ✓
-  J2: Cartas 3-8 → Charmander ✗
-  J1: Cartas 1-14 → Bulbasaur ✓
+```
+ÚLTIMAS JUGADAS:
+  J1: Cartas 5-12 → Pikachu (Par encontrado)
+  J2: Cartas 3-8 → Charmander (No coinciden)
+  J1: Cartas 1-14 → Bulbasaur (Par encontrado)
+```
 
 ### 5. Fin de la Partida
 
-Cuando todas las parejas sean encontradas:
+Cuando todas las parejas sean encontradas verás:
 
-╔═══════════════════════════════════════╗
-║        ¡PARTIDA TERMINADA!            ║
-╚═══════════════════════════════════════╝
+**PARTIDA TERMINADA**
 
-PUNTUACIÓN FINAL:
-  Jugador 1: 5 puntos
-  Jugador 2: 4 puntos
+**PUNTUACIÓN FINAL:**
+- Jugador 1: 5 puntos
+- Jugador 2: 4 puntos
 
-🏆 ¡GANADOR: Jugador 1!
+**GANADOR: Jugador 1**
 
 **En caso de empate:**
-
-🤝 ¡EMPATE!
+- EMPATE - Ambos jugadores tienen la misma puntuación
 
 ---
 
@@ -259,45 +263,29 @@ Permite jugar con una configuración reproducible del tablero.
 
 ### Uso:
 1. Presiona **S** en el menú principal
-2. Ingresa un número entero (ej: `12345`)
-3. El tablero se generará usando esa semilla
+2. Verás: `Ingresa la semilla (número entero):`
+3. Escribe un número (ejemplo: `42`)
+4. Presiona ENTER
+5. El tablero se generará usando esa semilla
 
-**Ejemplo:**
-
-Ingresa la semilla (número entero): 42
-
-Si vuelves a jugar con semilla 42, tendrás exactamente el mismo tablero.
+**Nota:** Si vuelves a jugar con la misma semilla (ejemplo: 42), tendrás exactamente el mismo tablero.
 
 ---
 
 ## 🎨 Cambiar Estilo de Menú (Tecla E)
 
-El juego tiene 3 estilos visuales:
+El juego tiene 3 estilos visuales diferentes para el menú:
 
-### 1. ESTILO_BORDES (Por defecto)
+1. **ESTILO_BORDES** (por defecto) - Usa caracteres especiales de caja doble
+2. **ESTILO_RETRO** - Usa caracteres simples de más y guiones
+3. **ESTILO_PERSONALIZADO** - El estilo que crees con la opción X
 
-╔══════════════════════════════════════╗
-║ MENÚ PRINCIPAL - POKEMON MEMORY      ║
-╠══════════════════════════════════════╣
-║ C) Cargar archivo                    ║
-╚══════════════════════════════════════╝
-
-### 2. ESTILO_RETRO
-
-+--------------------------------------+
-| MENÚ PRINCIPAL - POKEMON MEMORY     |
-+--------------------------------------+
-| [C] Cargar archivo                  |
-+--------------------------------------+
-
-```
 ---
+
 ### ESTILOS:
 
-** Presiona **E** para rotar entre los 3 estilos.
-
-
-** Presiona **X** para crear tu propio estilo!!
+- Presiona **E** para rotar entre los 3 estilos
+- Presiona **X** para crear tu propio estilo
 
 ---
 
@@ -354,44 +342,38 @@ El juego incluye 2 archivos de ejemplo:
 ### Sesión de juego paso a paso:
 
 **1. Ejecutar el juego**
-
+```bash
 ./tp2 ejemplos/largo.csv
+```
 
 **2. En el menú principal**
+- Verás: `Archivo cargado: 15 pokemones`
+- Presiona **M** (Mostrar pokedex)
+- Presiona **I** (ver por ID)
+- Presiona **A** (volver al menú)
 
-✓ Archivo cargado: 15 pokemones
+**3. Iniciar partida**
+- Presiona **J** (jugar con semilla aleatoria)
 
-**Presionar M → I (para ver la lista de pokemones por ID)**
+**4. Turno Jugador 1 - Primera jugada**
+- Escribe: `0` (selecciona carta 0)
+- Verás: `Primera carta seleccionada`
+- Escribe: `5` (selecciona carta 5)
+- Resultado: `No es un par. Turno del Jugador 2`
 
-**Presionar A (volver al menú principal)**
+**5. Turno Jugador 2 - Primera jugada**
+- Escribe: `1` (selecciona carta 1)
+- Verás: `Primera carta seleccionada`
+- Escribe: `7` (selecciona carta 7)
+- Resultado: `¡Par encontrado! El Jugador 2 gana un punto`
 
-**3. Presionar J (jugar con semilla aleatoria)**
+**6. Continuar jugando**
+- Los jugadores se turnan hasta encontrar todos los pares
 
-**4. Jugador 1 selecciona carta 0**
-
-Selecciona una carta (0-17): 0
-→ Primera carta seleccionada
-
-**5. Jugador 1 selecciona carta 5**
-
-Selecciona una carta (0-17): 5
-✗ No es un par. Turno del Jugador 2
-
-**6. Jugador 2 selecciona carta 1**
-
-Selecciona una carta (0-17): 1
-→ Primera carta seleccionada
-
-**7. Jugador 2 selecciona carta 7**
-
-Selecciona una carta (0-17): 7
-✓ ¡Par encontrado! El Jugador 2 gana un punto
-
-**... continuar hasta encontrar todos los pares ...**
-
-🏆 ¡GANADOR: Jugador 1 / 2!
-
-¡Gracias por jugar! Hasta pronto.
+**7. Fin del juego**
+- Verás la puntuación final
+- Se anuncia el ganador
+- Mensaje: `¡Gracias por jugar! Hasta pronto.`
 
 ---
 
