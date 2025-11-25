@@ -89,7 +89,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 
 
 <div align="center">
-<img width="70%" src="img/FLUJOMENU.svg.png">
+<img width="70%" src="img/flujomenu.svg">
 </div>
 
 ---
@@ -163,7 +163,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 
 '''
 <div align="center">
-<img width="70%" src="img/inicio_partida_semilla.svg.png">
+<img width="70%" src="img/inicio_partida_semilla.svg">
 </div>
 '''
 
