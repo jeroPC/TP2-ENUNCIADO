@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 typedef struct opcion_menu {
 	char tecla;
@@ -19,7 +20,7 @@ struct menu {
 	opcion_menu_t *opciones;
 	size_t cantidad_opciones;
 	size_t capacidad_opciones;
-	estilo_personalizado_t *estilo_custom; 
+	estilo_personalizado_t *estilo_custom;
 };
 
 menu_t *menu_crear(const char *titulo, estilo_menu_t estilo)
@@ -40,8 +41,8 @@ menu_t *menu_crear(const char *titulo, estilo_menu_t estilo)
 
 	menu->estilo = estilo;
 	menu->cantidad_opciones = 0;
-	menu->capacidad_opciones = 4; 
-	menu->estilo_custom = NULL; 
+	menu->capacidad_opciones = 4;
+	menu->estilo_custom = NULL;
 	menu->opciones =
 		malloc(menu->capacidad_opciones * sizeof(opcion_menu_t));
 	if (!menu->opciones) {
@@ -247,6 +248,8 @@ void menu_ejecutar(menu_t *menu, void *ctx_externo)
 			return;
 		}
 
+		opcion = (char)toupper((unsigned char)opcion);
+
 		int c;
 		while ((c = getchar()) != '\n' && c != EOF)
 			;
@@ -266,7 +269,7 @@ void menu_ejecutar(menu_t *menu, void *ctx_externo)
 				} else {
 					printf("Error: opción sin acción ni submenú.\n");
 				}
-				break; 
+				break;
 			}
 		if (!encontrada) {
 			printf("\n" ANSI_COLOR_RED
