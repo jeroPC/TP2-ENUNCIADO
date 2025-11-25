@@ -3,27 +3,25 @@
 
 #include <stdbool.h>
 
-/* Estilos predefinidos para el menú */
+
 typedef enum {
 	ESTILO_MINIMALISTA = 0,
 	ESTILO_BORDES = 1,
 	ESTILO_RETRO = 2,
-	ESTILO_PERSONALIZADO = 99, // Indicador de estilo personalizado
+	ESTILO_PERSONALIZADO = 99, 
 	TOTAL_ESTILOS = 3
 } estilo_menu_t;
 
-/* Estructura para definir un estilo personalizado.
- * Permite al usuario crear estilos visuales propios sin modificar menu.c
- */
+
 typedef struct estilo_personalizado {
-	char *borde_superior; // Ej: "╔═══════╗"
-	char *borde_inferior; // Ej: "╚═══════╝"
-	char *separador; // Ej: "─────────"
-	char *prefijo_opcion; // Ej: "  ▸ "
-	char *color_titulo; // Color ANSI para el título
-	char *color_opciones; // Color ANSI para las opciones
-	char *color_teclas; // Color ANSI para las teclas
-	char *color_reset; // ANSI reset
+	char *borde_superior; 
+	char *borde_inferior; 
+	char *separador; 
+	char *prefijo_opcion; 
+	char *color_titulo; 
+	char *color_opciones; 
+	char *color_teclas; 
+	char *color_reset; 
 } estilo_personalizado_t;
 
 typedef struct menu menu_t;

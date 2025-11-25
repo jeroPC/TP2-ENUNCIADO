@@ -45,6 +45,28 @@ El TP2 implementa un juego de memoria (memotest) de pokemones con un sistema de 
 
 ## TDA Menu (`menu.h`)
 
+### Justificación de Operaciones del TDA Menú
+
+El TDA Menú fue diseñado para ser **flexible, reutilizable y fácil de usar**. Las operaciones incluidas responden a necesidades específicas del proyecto:
+
+- **`menu_crear()`**: Permite inicializar un menú con título y estilo. Es fundamental para crear la estructura base antes de agregar opciones.
+
+- **`menu_agregar_opcion()`**: Núcleo del TDA. Permite asociar teclas a acciones o submenús. La flexibilidad de aceptar callbacks o submenús (pero no ambos) permite crear tanto menús simples como jerarquías complejas de navegación.
+
+- **`menu_cambiar_estilo()` y `menu_obtener_estilo()`**: Permiten personalizar la presentación visual sin modificar la lógica del menú. Útil para adaptar la interfaz a preferencias del usuario o contextos diferentes.
+
+- **`menu_establecer_estilo_personalizado()`**: Extiende la personalización permitiendo estilos completamente customizados con colores ANSI y caracteres especiales.
+
+- **`menu_mostrar()`**: Renderiza el menú en consola. Separar la visualización de la lógica permite mayor control y testeo.
+
+- **`menu_ejecutar()`**: Implementa el loop principal: mostrar → leer → ejecutar → repetir. Abstrae la complejidad del flujo del menú, permitiendo que el usuario solo defina las acciones.
+
+- **`menu_destruir()`**: Garantiza liberación correcta de memoria, incluyendo títulos, descripciones y arrays dinámicos.
+
+Estas primitivas cubren el ciclo completo: **creación, configuración, ejecución y destrucción**, manteniendo el TDA simple pero poderoso.
+
+---
+
 ### Primitivas Principales
 
 **menu_t *menu_crear()**
@@ -60,7 +82,7 @@ El TP2 implementa un juego de memoria (memotest) de pokemones con un sistema de 
 - El array de opciones se expande dinámicamente según sea necesario
 - **Complejidad**: O(m) en el peor caso, donde m es la cantidad de opciones actuales (buscar tecla existente + posible realloc). O(1) amortizado para agregar al final
 
-**enum estilo_menu menu_obtener_estilo()**
+**enum *estilo_menu menu_obtener_estilo()**
 - Retorna el estilo actual del menú
 - Si el menú es NULL, retorna ESTILO_MINIMALISTA por defecto
 - **Complejidad**: O(1)
@@ -70,7 +92,7 @@ El TP2 implementa un juego de memoria (memotest) de pokemones con un sistema de 
 - Retorna el mismo menú con el estilo actualizado
 - **Complejidad**: O(1)
 
-**void menu_destruir()**
+**void *menu_destruir()**
 - Libera toda la memoria asociada al menú
 - Destruye recursivamente los submenús
 - No libera los contextos de usuario (`ctx`)
@@ -98,7 +120,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 
 ### Primitivas de Inicialización
 
-**`juego_t *juego_crear()`**
+**juego_t *juego_crear()**
 - Crea una nueva instancia del juego
 - Inicializa las estructuras internas: lista (pokedex), hash (búsqueda por nombre), lista (cartas), pila (historial)
 - Retorna el juego creado o NULL en caso de error
@@ -108,7 +130,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 <img width="70%" src="img/diagrama_crear.png">
 </div>
 
-**int juego_cargar_pokedex()**
+**int *juego_cargar_pokedex()**
 - Carga pokemones desde un archivo CSV
 - **Importante**: Crea copias profundas de cada pokemon (no guarda referencias directas)
 - Retorna la cantidad de pokemones cargados o -1 en caso de error
@@ -117,7 +139,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 
 ---
 
-**void juego_destruir()**
+**void *juego_destruir()**
 - Libera toda la memoria del juego
 - Destruye los pokemones copiados (tanto nombres como estructuras)
 - Libera las cartas y el historial de jugadas
@@ -125,11 +147,11 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 
 ### Primitivas de Consulta
 
-**size_t juego_cantidad_pokemones()**
+**size_t *juego_cantidad_pokemones()**
 - Retorna la cantidad de pokemones cargados en la pokedex
 - **Complejidad**: O(1)
 
-**size_t juego_buscar_por_nombre()**
+**size_t *juego_buscar_por_nombre()**
 - Busca pokemones cuyo nombre contenga la subcadena especificada
 - Utiliza búsqueda lineal con `strstr` para encontrar coincidencias parciales
 - Llena el array de resultados hasta `max_resultados`
@@ -183,13 +205,13 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 - **Complejidad**: O(1)
 
 ---
-**size_t juego_obtener_tablero()**
+**size_t *juego_obtener_tablero()**
 - Copia el estado actual de las 18 cartas al array proporcionado
 - Cada carta contiene: posición, puntero al pokemon, estado (descubierta/emparejada)
 - **Complejidad**: O(1) ya que siempre copia 18 cartas fijas
 
 ---
-**int juego_seleccionar_carta()**
+**int *juego_seleccionar_carta()**
 - Selecciona una carta en la posición especificada
 - Si es la primera carta: la descubre y retorna 0
 - Si es la segunda carta:
@@ -199,18 +221,18 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 - **Complejidad**: O(1)
 
 ---
-**int juego_obtener_puntuacion()**
+**int *juego_obtener_puntuacion()**
 - Retorna los puntos del jugador especificado (1 o 2)
 - **Complejidad**: O(1)
 
 ---
-**size_t juego_obtener_ultimas_jugadas()**
+**size_t *juego_obtener_ultimas_jugadas()**
 - Obtiene las últimas N jugadas del historial
 - Utiliza una pila auxiliar para extraer y recolocar las jugadas
 - **Complejidad**: O(N) donde N es la cantidad de jugadas solicitadas
 
 ---
-**size_t juego_obtener_jugadas_jugador()**
+**size_t *juego_obtener_jugadas_jugador()**
 - Obtiene las últimas N jugadas de un jugador específico
 - Filtra el historial por el jugador solicitado
 - **Complejidad**: O(H) donde H es el tamaño total del historial (debe recorrerlo para filtrar)
@@ -221,12 +243,12 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 - **Complejidad**: O(1) ya que verifica un contador o estado interno
 
 ---
-**int juego_obtener_ganador()**
+**int *juego_obtener_ganador()**
 - Retorna el jugador ganador (1 o 2), 0 en caso de empate, o -1 si la partida no terminó
 - **Complejidad**: O(1)
 
 ---
-**void juego_finalizar_partida()**
+**void *juego_finalizar_partida()**
 - Finaliza la partida actual
 - Libera las cartas y el historial de jugadas
 - Resetea los puntajes
@@ -235,7 +257,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 ---
 ### Primitivas de Cartas
 
-**void juego_crear_cartas_memoria()**
+**void *juego_crear_cartas_memoria()**
 - Genera 18 cartas (9 pares) seleccionando pokemones aleatorios
 - Mezcla las cartas usando Fisher-Yates
 - Actualiza las posiciones de cada carta
@@ -245,7 +267,7 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 
 ### Primitivas de Conversión de Tipos
 
-**enum tipo_pokemon juego_tipo_desde_string()**
+**enum *tipo_pokemon juego_tipo_desde_string()**
 - Convierte un string ("ELEC", "FUEG", etc.) a su enumeración correspondiente
 - Retorna TIPO_NORM para strings inválidos o NULL
 - **Complejidad**: O(1) con cantidad fija de comparaciones
@@ -261,7 +283,109 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 
 ## Decisiones de Diseño Importantes
 
-### 1. Copia Profunda de Pokemones - Problema Crítico de Memoria y Su Solución
+### 1. Justificación de Elección de TDAs
+
+Cada estructura de datos fue elegida cuidadosamente según las necesidades específicas del juego:
+
+#### **Lista** → Pokedex y Cartas
+**¿Por qué Lista?**
+- Necesitamos mantener el **orden de inserción** de los pokemones
+- Acceso secuencial eficiente para recorrer todos los pokemones
+- Operaciones de agregar al final son O(1)
+- Ideal para las 18 cartas del juego (tamaño pequeño, orden importante)
+
+**Alternativas descartadas:**
+- **Array dinámico**: Requeriría manejo manual de capacidad
+- **ABB**: No necesitamos orden específico en la pokedex base
+- **Hash**: No permite iteración ordenada
+
+#### **Hash** → Búsqueda rápida por nombre
+**¿Por qué Hash?**
+- Búsquedas por nombre en **O(1) promedio** (vs O(n) lineal)
+- El juego requiere búsquedas frecuentes por nombre de pokemon
+- Complementa a la lista: lista para orden, hash para velocidad
+
+**Alternativas descartadas:**
+- **Lista sola**: Búsquedas O(n) serían muy lentas con muchos pokemones
+- **ABB por nombre**: Búsquedas O(log n), pero más complejo de mantener balanceado
+
+#### **ABB** → Ordenamiento temporal
+**¿Por qué ABB temporal?**
+- Necesitamos **listar pokemones ordenados** (por nombre o ID)
+- ABB permite inserción y recorrido inorden en O(n log n) promedio
+- Es **temporal**: se crea, se usa, se destruye (no almacena referencias)
+
+**Alternativas descartadas:**
+- **Ordenamiento de arrays**: Requeriría copiar toda la lista a un array
+- **ABB permanente**: Duplicaría memoria innecesariamente
+
+#### **Pila** → Historial de jugadas
+**¿Por qué Pila?**
+- Necesitamos las **últimas N jugadas** (LIFO = Last In, First Out)
+- Estructura natural para historial: lo más reciente está "arriba"
+- Operaciones push/pop en O(1)
+
+**Alternativas descartadas:**
+- **Cola**: FIFO no sirve, necesitamos acceso a las más recientes
+- **Lista**: Funcionaría, pero pila es más semántica para este caso
+
+---
+
+### 2. Estructuras Auxiliares Implementadas
+
+#### **Pila Auxiliar para Consulta de Historial**
+
+**Problema:** Obtener las últimas N jugadas sin perder datos de la pila original.
+
+**Solución:** Usar una pila auxiliar temporal:
+
+```
+Pila Original: [J1, J2, J3, J4, J5]  ← tope
+                ↓ pop N veces (N=3)
+Pila Auxiliar: [J5, J4, J3]  ← copiamos a resultado
+                ↓ devolver
+Pila Original: [J1, J2, J3, J4, J5]  ← restaurada
+```
+
+**Algoritmo:**
+1. Crear pila auxiliar vacía
+2. Extraer N elementos de la pila original → pila auxiliar
+3. Copiar los datos al array de resultados
+4. Devolver los N elementos de la pila auxiliar → pila original
+5. Destruir pila auxiliar
+
+**Complejidad:** O(N) donde N es la cantidad de jugadas solicitadas
+
+**Ventajas:**
+- Mantiene intacta la pila original
+- No requiere recorrer toda la pila
+- Memoria adicional mínima (solo N elementos)
+
+#### **Array Dinámico de Opciones en el Menú**
+
+El TDA menú usa un array dinámico que crece según demanda (similar al TP1):
+
+```c
+struct menu {
+    opcion_t *opciones;  // Array dinámico
+    size_t cantidad;
+    size_t capacidad;    // Capacidad actual
+};
+```
+
+**Estrategia de crecimiento:**
+- Capacidad inicial: 10 opciones
+- Al llenarse: duplicar capacidad con `realloc`
+- Complejidad amortizada: O(1) por inserción
+
+**¿Por qué no una lista?**
+- Array permite acceso directo por índice O(1)
+- Cantidad de opciones es pequeña (raramente > 20)
+- Realloc es eficiente para tamaños pequeños
+
+---
+
+### 3. Copia Profunda de Pokemones - Problema de Memoria y Su Solución
 
 **¿Qué pasó?**
 Inicialmente, cuando cargábamos pokemones desde el archivo CSV usando `tp1_leer_archivo()`, guardábamos **referencias directas** a los pokemones en nuestras estructuras (lista y hash). 
@@ -292,8 +416,8 @@ tp1_destruir(tp1);
 
 ####  La Solución: Copia Profunda 
 
-**¿Cómo lo solucionamos?**
-Implementamos **copias profundas** de cada pokemon, asegurándonos de que el juego tenga su **propia memoria independiente**
+**¿Cómo lo solucione?**
+Implementé **copias profundas** de cada pokemon, asegurándome de que el juego tenga su **propia memoria independiente**
 
 **¿Qué implica hacer una copia profunda?**
 1. Reservar memoria nueva para cada estructura pokemon
@@ -301,25 +425,47 @@ Implementamos **copias profundas** de cada pokemon, asegurándonos de que el jue
 3. Duplicar el string del nombre con su propia memoria, no solo copiar el puntero
 ----
 
-###  Uso de Estructuras de Datos
 
-- **Lista**: Para almacenar la pokedex y las cartas del juego
-- **Hash**: Para búsquedas rápidas de pokemones por nombre
-- **ABB**: Temporal, para ordenar pokemones al listar
-- **Pila**: Para mantener el historial de jugadas (LIFO)
 
-### 3. Gestión del Historial de Jugadas
 
-El historial se implementa con una pila. Para obtener las últimas N jugadas sin perder datos, se usa una pila auxiliar:
-1. Extraer N elementos de la pila original → pila auxiliar
-2. Copiar los datos al array de resultados
-3. Devolver los elementos de la pila auxiliar → pila original
 
-### 4. Sistema de Turnos
+### 4. Problema: Mezcla Aleatoria de Cartas (Fisher-Yates)
 
-El juego alterna entre jugadores cuando ocurre un error (par incorrecto). Cuando un jugador acierta, mantiene el turno para la siguiente jugada.
+**Dificultad:** Implementar Fisher-Yates correctamente con una lista enlazada (no array).
 
----
+**Desafío:** Fisher-Yates requiere acceso aleatorio por índice, pero las listas enlazadas tienen acceso O(n).
 
----
+**Solución:**
+1. Obtener tamaño de la lista (18 cartas)
+2. Para cada posición i de 17 a 1:
+   - Generar índice aleatorio j entre 0 y i
+   - Extraer elemento en posición i
+   - Extraer elemento en posición j  
+   - Insertar elemento i en posición j
+   - Insertar elemento j en posición i
+3. Actualizar posiciones de todas las cartas
+
+**Complejidad:** O(n²) debido al acceso secuencial de listas, pero aceptable para n=18
+
+```
+
+### 5. Problema: Validación de Cartas Seleccionadas
+
+**Dificultad:** Manejar casos borde al seleccionar cartas:
+- Carta ya emparejada
+- Misma carta dos veces
+- Posición inválida
+- Seleccionar sin partida activa
+
+**Solución: Validaciones en cascada:**
+```c
+if (!juego->partida_activa) return ERROR_SIN_PARTIDA;
+if (posicion >= 18) return ERROR_POSICION_INVALIDA;
+if (carta->emparejada) return ERROR_CARTA_YA_EMPAREJADA;
+if (primera_carta && primera_carta->posicion == posicion) 
+    return ERROR_MISMA_CARTA;
+```
+
+
+
 

@@ -16,10 +16,10 @@ typedef struct opcion_menu {
 struct menu {
 	char *titulo;
 	estilo_menu_t estilo;
-	opcion_menu_t *opciones; // Array dinámico de opciones
+	opcion_menu_t *opciones;
 	size_t cantidad_opciones;
 	size_t capacidad_opciones;
-	estilo_personalizado_t *estilo_custom; // Puntero a estilo personalizado
+	estilo_personalizado_t *estilo_custom; 
 };
 
 menu_t *menu_crear(const char *titulo, estilo_menu_t estilo)
@@ -40,8 +40,8 @@ menu_t *menu_crear(const char *titulo, estilo_menu_t estilo)
 
 	menu->estilo = estilo;
 	menu->cantidad_opciones = 0;
-	menu->capacidad_opciones = 4; // capacidad inicial
-	menu->estilo_custom = NULL; // Sin estilo personalizado inicialmente
+	menu->capacidad_opciones = 4; 
+	menu->estilo_custom = NULL; 
 	menu->opciones =
 		malloc(menu->capacidad_opciones * sizeof(opcion_menu_t));
 	if (!menu->opciones) {
@@ -165,28 +165,24 @@ static void mostrar_estilo_retro(menu_t *menu)
 static void mostrar_estilo_personalizado(menu_t *menu)
 {
 	if (!menu->estilo_custom) {
-		mostrar_estilo_minimalista(menu); // Fallback
+		mostrar_estilo_minimalista(menu);
 		return;
 	}
 
 	estilo_personalizado_t *e = menu->estilo_custom;
 
-	// Borde superior
 	if (e->borde_superior)
 		printf("\n%s\n", e->borde_superior);
 
-	// Título
 	if (e->color_titulo)
 		printf("%s%s%s\n", e->color_titulo, menu->titulo,
 		       e->color_reset ? e->color_reset : ANSI_COLOR_RESET);
 	else
 		printf("%s\n", menu->titulo);
 
-	// Separador
 	if (e->separador)
 		printf("%s\n", e->separador);
 
-	// Opciones
 	for (size_t i = 0; i < menu->cantidad_opciones; i++) {
 		if (e->prefijo_opcion)
 			printf("%s", e->prefijo_opcion);
@@ -210,7 +206,6 @@ static void mostrar_estilo_personalizado(menu_t *menu)
 			printf("%s\n", menu->opciones[i].descripcion);
 	}
 
-	// Borde inferior
 	if (e->borde_inferior)
 		printf("%s\n", e->borde_inferior);
 }
@@ -252,7 +247,6 @@ void menu_ejecutar(menu_t *menu, void *ctx_externo)
 			return;
 		}
 
-		// Limpiar el buffer de entrada para evitar problemas con fgets
 		int c;
 		while ((c = getchar()) != '\n' && c != EOF)
 			;
@@ -272,7 +266,7 @@ void menu_ejecutar(menu_t *menu, void *ctx_externo)
 				} else {
 					printf("Error: opción sin acción ni submenú.\n");
 				}
-				break; // Salir del for una vez encontrada la opción
+				break; 
 			}
 		if (!encontrada) {
 			printf("\n" ANSI_COLOR_RED
@@ -286,7 +280,6 @@ void menu_destruir(menu_t *menu)
 	if (!menu)
 		return;
 
-	// Liberar todas las descripciones de las opciones
 	for (size_t i = 0; i < menu->cantidad_opciones; i++) {
 		free(menu->opciones[i].descripcion);
 	}
@@ -308,7 +301,6 @@ estilo_crear(const char *borde_superior, const char *borde_inferior,
 	if (!estilo)
 		return NULL;
 
-	// Copiar strings (si son NULL, dejamos NULL)
 	estilo->borde_superior = borde_superior ? strdup(borde_superior) : NULL;
 	estilo->borde_inferior = borde_inferior ? strdup(borde_inferior) : NULL;
 	estilo->separador = separador ? strdup(separador) : NULL;

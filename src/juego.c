@@ -12,7 +12,6 @@
 #include "cola.h"
 #include "tp1.h"
 
-// Declaraciones adelantadas de funciones auxiliares
 static bool buscar_id_en_lista(void *elemento, void *extra);
 static int comparador_pokemon_nombre(const void *a, const void *b);
 static int comparador_pokemon_id(const void *a, const void *b);
