@@ -13,7 +13,6 @@
 Ejecuta en la terminal:
 
 ```bash
-cd /home/jeropc/tp2_algo2_menu/TP2-ENUNCIADO
 gcc -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0 -g -o tp2 tp2.c src/*.c -lm
 ```
 
@@ -41,7 +40,7 @@ o
 
 ## 📖 Menú Principal
 
-Al iniciar, verás el **MENÚ PRINCIPAL** con las siguientes opciones:
+Al iniciar, vas a ver el **MENÚ PRINCIPAL** con las siguientes opciones:
 
 - **C)** Cargar archivo
 - **B)** Buscar pokemon
@@ -115,7 +114,7 @@ Permite buscar pokemones específicos en la Pokedex cargada.
 
 1. Presiona **N** en el submenú
 2. Verás el prompt: `Ingresa el nombre (o parte del nombre):`
-3. escribí el nombre o parte del nombre que buscas
+3. Escribí el nombre o parte del nombre que buscas
 4. Presiona **ENTER**
 
 ### Ejemplos de búsqueda:
@@ -293,30 +292,11 @@ El juego tiene 3 estilos visuales diferentes para el menú:
 - **Observa al rival:** Cuando tu oponente voltea cartas, memoriza también esas posiciones
 
 ### 🎮 Controles Importantes
-- **Búsqueda por nombre:** Presiona N, luego escribí el nombre cuando aparezca el prompt
+- **Búsqueda por nombre:** Presiona N, luego Escribí el nombre cuando aparezca el prompt
 - **Ver todos los pokemones:** Presiona N + ENTER sin escribir nada
-- **Búsqueda parcial:** escribí solo parte del nombre (ej: "AB" encuentra ABC, ABCD, etc.)
+- **Búsqueda parcial:** Escribí solo parte del nombre (ej: "AB" encuentra ABC, ABCD, etc.)
 - **Navegación:** Usa la tecla A para volver atrás en cualquier submenú
 - **Estilos:** Cambia el estilo visual con E para encontrar tu preferido
-
----
-
-
-
-## 💡 REQUISITOS
-
-### ❌ "Se necesitan al menos 9 pokemones para jugar"
-- El archivo debe tener mínimo 9 pokemones
-- Usa `ejemplos/largo.csv` que tiene 15 pokemones (suficiente)
-
-### ❌ "Primero debes cargar un archivo"
-- Ejecuta el programa con: `./tp2 ejemplos/largo.csv`
-- O presiona **C** y carga un archivo CSV antes de jugar o buscar
-
-### ❌ "Carta inválida o ya seleccionada"
-- El número debe estar entre 0 y 17
-- No puedes seleccionar una carta ya emparejada (con ✓✓)
-- No puedes seleccionar la misma carta dos veces en un turno
 
 ---
 
@@ -384,11 +364,11 @@ El juego incluye 2 archivos de ejemplo:
 | | J | Jugar (aleatorio) |
 | | S | Jugar con semilla |
 | | E | Cambiar estilo |
+| | X | Crear estilo personalizado |
 | | Q | Salir |
 | **Submenús Buscar/Mostrar** | N | Por nombre |
 | | I | Por ID |
 | | A | Volver atrás |
 | **Durante Partida** | 0-17 | Número de carta |
-
 
 ---

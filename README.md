@@ -335,7 +335,6 @@ Cada estructura de datos fue elegida cuidadosamente según las necesidades espec
 - Pila Original: [J1, J2, J3, J4, J5]  ← restaurada
 
 
-
 **Algoritmo:**
 1. Crear pila auxiliar vacía
 2. Extraer N elementos de la pila original → pila auxiliar

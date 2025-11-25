@@ -10,16 +10,11 @@ Este programa demuestra el funcionamiento completo del TDA Menú implementado pa
 - Menú principal
 - Submenús anidados
 
-### 2. **Gestión de Opciones**
-- Agregar opciones con acciones
-- Agregar opciones que abren submenús
-- Reemplazar opciones existentes (por tecla)
-
-### 3. **Contextos**
+### 2. **Contextos**
 - **Contexto Interno**: Datos propios de cada opción (ej: mensajes personalizados)
 - **Contexto Externo**: Datos compartidos entre todas las acciones (ej: contador, nombre de usuario)
 
-### 4. **Estilos Visuales**
+### 3. **Estilos Visuales**
 - `ESTILO_MINIMALISTA`: Menú simple sin decoraciones
 - `ESTILO_BORDES`: Menú con bordes usando caracteres Unicode
 - `ESTILO_RETRO`: Menú estilo retro con caracteres ASCII
@@ -27,19 +22,26 @@ Este programa demuestra el funcionamiento completo del TDA Menú implementado pa
 - Cambio dinámico de estilo durante la ejecución
 
 
-### 5. **Acciones Implementadas**
-- `S`: Saludar (usa contexto externo para mostrar el nombre)
-- `O`: Ir al submenú de opciones (navegación a submenú)
-- `E`: Cambiar estilo del menú (cambia entre los 3 estilos)
-- `1`: Mensaje personalizado 1 (usa contexto interno)
-- `2`: Mensaje personalizado 2 (usa contexto interno)
+### 4. **Acciones Implementadas (Menú Principal)**
+- `C`: Cargar archivo de pokemones desde CSV
+- `B`: Abrir submenú de búsqueda de pokemones
+- `M`: Abrir submenú para mostrar la pokedex
+- `J`: Jugar partida con semilla aleatoria
+- `S`: Jugar partida con semilla personalizada
+- `E`: Cambiar entre estilos predefinidos (Minimalista/Bordes/Retro)
+- `P`: Aplicar estilo personalizado predefinido
+- `X`: Crear tu propio estilo de forma interactiva
 - `Q`: Salir del programa
 
-### 6. **Opciones del Submenú**
-- `I`: Incrementar contador (modifica contexto externo)
-- `M`: Mostrar contador (lee contexto externo)
-- `N`: Ingresar nombre (modifica contexto externo)
-- `V`: Volver al menú principal (retorna false para salir del submenú)
+### 5. **Opciones del Submenú de Búsqueda**
+- `N`: Buscar pokemon por nombre (búsqueda parcial)
+- `I`: Buscar pokemon por ID
+- `A`: Volver al menú principal
+
+### 6. **Opciones del Submenú de Mostrar**
+- `N`: Listar todos los pokemones ordenados por nombre
+- `I`: Listar todos los pokemones ordenados por ID
+- `A`: Volver al menú principal
 
 ## Compilación
 
@@ -56,17 +58,22 @@ gcc -Wall -Wextra -std=c99 -g -o tp2 tp2.c src/menu.c -I.
 ## Flujo de Prueba Recomendado
 
 1. **Al iniciar**, verás el menú principal en estilo minimalista
-2. Presiona `E` para cambiar el estilo → verás el menú con bordes
-3. Presiona `E` nuevamente → verás el estilo retro
-4. Presiona `E` una vez más → volverás al estilo minimalista
-5. Presiona `O` para entrar al submenú
-6. En el submenú, presiona `I` varias veces para incrementar el contador
-7. Presiona `M` para ver el valor del contador
-8. Presiona `N` para ingresar tu nombre
-9. Presiona `V` para volver al menú principal
-10. Presiona `S` para ver el saludo con tu nombre
-11. Presiona `1` o `2` para ver mensajes con contexto interno
-12. Presiona `Q` para salir
+2. Presiona `C` para cargar el archivo de pokemones (ejemplo: `pokemones.csv`)
+3. Presiona `E` para cambiar el estilo → verás el menú con bordes
+4. Presiona `E` nuevamente → verás el estilo retro  
+5. Presiona `E` una vez más → volverás al estilo minimalista
+6. Presiona `X` para crear tu propio estilo personalizado de forma interactiva
+7. Presiona `B` para entrar al submenú de búsqueda:
+   - Presiona `N` para buscar un pokemon por nombre (búsqueda parcial)
+   - Presiona `I` para buscar un pokemon por ID
+   - Presiona `A` para volver al menú principal
+8. Presiona `M` para entrar al submenú de mostrar:
+   - Presiona `N` para ver todos los pokemones ordenados por nombre
+   - Presiona `I` para ver todos los pokemones ordenados por ID
+   - Presiona `A` para volver al menú principal
+9. Presiona `J` para jugar una partida con semilla aleatoria
+10. Presiona `S` para jugar una partida con semilla personalizada
+11. Presiona `Q` para salir
 
 ## Características Destacadas
 
@@ -90,21 +97,37 @@ gcc -Wall -Wextra -std=c99 -g -o tp2 tp2.c src/menu.c -I.
 
 ```
 tp2.c
-├── contexto_t: Estructura para compartir datos
+├── contexto_juego_t: Estructura para compartir datos del juego y estilos
+├── Funciones auxiliares privadas:
+│   ├── limpiar_pantalla()
+│   ├── pausar()
+│   ├── verificar_archivo_cargado()
+│   ├── obtener_color_por_indice()
+│   ├── crear_estilo_interactivo()
+│   └── ...
 ├── Funciones de acción (callback):
-│   ├── accion_saludar()
-│   ├── accion_mensaje_personalizado()
-│   ├── accion_incrementar()
-│   ├── accion_mostrar_contador()
+│   ├── accion_cargar_archivo()
+│   ├── accion_buscar_nombre()
+│   ├── accion_buscar_id()
+│   ├── accion_mostrar_nombre()
+│   ├── accion_mostrar_id()
+│   ├── accion_jugar()
+│   ├── accion_jugar_semilla()
 │   ├── accion_cambiar_estilo()
-│   ├── accion_pedir_nombre()
+│   ├── accion_estilo_personalizado()
+│   ├── accion_crear_estilo_interactivo()
 │   ├── accion_volver()
 │   └── accion_salir()
+├── Funciones de visualización del juego:
+│   ├── dibujar_tablero()
+│   ├── mostrar_ultimas_jugadas()
+│   ├── ejecutar_partida()
+│   └── mostrar_pokemon()
 └── main():
-    ├── Inicialización del contexto
+    ├── Inicialización del contexto del juego
     ├── Creación del menú principal
-    ├── Creación del submenú
+    ├── Creación de submenús (búsqueda y mostrar)
     ├── Configuración de opciones
     ├── Ejecución del menú
-    └── Limpieza de memoria
+    └── Limpieza de memoria (juego, menús, estilos)
 ```
