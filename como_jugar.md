@@ -10,26 +10,22 @@
 
 ### Compilar el juego
 
-```bash
-cd /home/jeropc/tp2_algo2_menu/TP2-ENUNCIADO
-gcc -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0 -g -o tp2 tp2.c src/*.c -lm
-```
+    cd /home/jeropc/tp2_algo2_menu/TP2-ENUNCIADO
+    gcc -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0 -g -o tp2 tp2.c src/*.c -lm
 
 ### Ejecutar el juego
 
 **Opción 1: Sin archivo precargado**
-```bash
-./tp2
-```
+
+    ./tp2
 
 **Opción 2: Con archivo precargado** 
-```bash
-./tp2 ejemplos/normal.csv
-```
+
+    ./tp2 ejemplos/normal.csv
+
 o
-```bash
-./tp2 ejemplos/largo.csv
-```
+
+    ./tp2 ejemplos/largo.csv
 
 ---
 
@@ -37,20 +33,18 @@ o
 
 Al iniciar, verás el **MENÚ PRINCIPAL** con las siguientes opciones:
 
-```
-╔══════════════════════════════════════╗
-║ MENÚ PRINCIPAL - POKEMON MEMORY      ║
-╠══════════════════════════════════════╣
-║ C) Cargar archivo                    ║
-║ B) Buscar pokemon                    ║
-║ M) Mostrar pokedex                   ║
-║ J) Jugar (semilla aleatoria)         ║
-║ S) Jugar con semilla                 ║
-║ E) Cambiar estilo de menú            ║
-║ X) X) Crear tu propio estilo         ║
-║ Q) Salir                             ║
-╚══════════════════════════════════════╝
-```
+    ╔══════════════════════════════════════╗
+    ║ MENÚ PRINCIPAL - POKEMON MEMORY      ║
+    ╠══════════════════════════════════════╣
+    ║ C) Cargar archivo                    ║
+    ║ B) Buscar pokemon                    ║
+    ║ M) Mostrar pokedex                   ║
+    ║ J) Jugar (semilla aleatoria)         ║
+    ║ S) Jugar con semilla                 ║
+    ║ E) Cambiar estilo de menú            ║
+    ║ X) X) Crear tu propio estilo         ║
+    ║ Q) Salir                             ║
+    ╚══════════════════════════════════════╝
 
 ### ⌨️ Opciones del Menú
 
@@ -71,16 +65,14 @@ Al iniciar, verás el **MENÚ PRINCIPAL** con las siguientes opciones:
 Antes de jugar, necesitas cargar pokemones desde un archivo CSV.
 
 ### Formato del archivo CSV:
-```
-ID,Nombre,Tipo,Ataque,Defensa,Velocidad
-```
+
+    ID,Nombre,Tipo,Ataque,Defensa,Velocidad
 
 ### Ejemplo:
-```csv
-1,Pikachu,ELEC,55,40,90
-2,Charmander,FUEG,52,43,65
-3,Bulbasaur,PLAN,49,49,45
-```
+
+    1,Pikachu,ELEC,55,40,90
+    2,Charmander,FUEG,52,43,65
+    3,Bulbasaur,PLAN,49,49,45
 
 ### Tipos válidos:
 - `ELEC` - Eléctrico
@@ -119,30 +111,30 @@ Permite buscar pokemones específicos en la Pokedex cargada.
 ### Ejemplos de búsqueda:
 
 **Buscar pokemones con "ABC":**
-```
-Selecciona una opción: N
 
-═══ BUSCAR POR NOMBRE ═══
+    Selecciona una opción: N
+    
+    ═══ BUSCAR POR NOMBRE ═══
+    
+    Ingresa el nombre (o parte del nombre): ABC
+                                             ↑ escribis ABC
 
-Ingresa el nombre (o parte del nombre): ABC
-                                         ↑ escribis ABC
-```
 **Resultado:** Muestra ABC, ABCD, ABCDE, ABCDEF, etc.
 
 **Ver todos los pokemones:**
-```
-Ingresa el nombre (o parte del nombre): [presiona ENTER sin escribir nada]
-```
+
+    Ingresa el nombre (o parte del nombre): [presiona ENTER sin escribir nada]
+
 **Resultado:** Muestra todos los 15 pokemones
 
 ### Búsqueda por ID:
-```
-Selecciona una opción: I
 
-═══ BUSCAR POR ID ═══
+    Selecciona una opción: I
+    
+    ═══ BUSCAR POR ID ═══
+    
+    Ingresa el ID: 5
 
-Ingresa el ID: 5
-```
 **Resultado:** Muestra el pokemon con ID 5
 
 ---
@@ -157,10 +149,9 @@ Lista todos los pokemones cargados.
 - **A** - Volver al menú anterior
 
 ### Formato de salida:
-```
-[ID:   1] Pikachu         | Tipo: ELEC | ATK:  55 | DEF:  40 | VEL:  90
-[ID:   2] Charmander      | Tipo: FUEG | ATK:  52 | DEF:  43 | VEL:  65
-```
+
+    [ID:   1] Pikachu         | Tipo: ELEC | ATK:  55 | DEF:  40 | VEL:  90
+    [ID:   2] Charmander      | Tipo: FUEG | ATK:  52 | DEF:  43 | VEL:  65
 
 ---
 
@@ -190,81 +181,70 @@ Inicia una partida con pokemones seleccionados aleatoriamente.
 
 Al comenzar, verás:
 
-```
-╔═══════════════════════════════════════╗
-║     JUEGO DE MEMORIA POKEMON          ║
-╠═══════════════════════════════════════╣
-║  Jugador 1:  0 pts | Jugador 2:  0 pts ║
-║  Turno: Jugador 1                      ║
-╚═══════════════════════════════════════╝
-
-╔════════════════════ TABLERO ════════════════════╗
-║ [ 0][ 1][ 2][ 3][ 4][ 5] ║
-║ [ 6][ 7][ 8][ 9][10][11] ║
-║ [12][13][14][15][16][17] ║
-╚═════════════════════════════════════════════════╝
-```
+    ╔═══════════════════════════════════════╗
+    ║     JUEGO DE MEMORIA POKEMON          ║
+    ╠═══════════════════════════════════════╣
+    ║  Jugador 1:  0 pts | Jugador 2:  0 pts ║
+    ║  Turno: Jugador 1                      ║
+    ╚═══════════════════════════════════════╝
+    
+    ╔════════════════════ TABLERO ════════════════════╗
+    ║ [ 0][ 1][ 2][ 3][ 4][ 5] ║
+    ║ [ 6][ 7][ 8][ 9][10][11] ║
+    ║ [12][13][14][15][16][17] ║
+    ╚═════════════════════════════════════════════════╝
 
 ### 2. Seleccionar Primera Carta
 
-```
-Selecciona una carta (0-17): 5
-→ Primera carta seleccionada
-```
+    Selecciona una carta (0-17): 5
+    → Primera carta seleccionada
 
 El tablero mostrará la carta descubierta:
-```
-║ [ 0][ 1][ 2][ 3][ 4]Pik ║
-```
+
+    ║ [ 0][ 1][ 2][ 3][ 4]Pik ║
 
 ### 3. Seleccionar Segunda Carta
 
-```
-Selecciona una carta (0-17): 12
-```
+    Selecciona una carta (0-17): 12
 
 **Si coinciden:**
-```
-✓ ¡Par encontrado! El Jugador 1 gana un punto
-```
-Las cartas quedan marcadas: `✓✓`
+
+    ✓ ¡Par encontrado! El Jugador 1 gana un punto
+
+Las cartas quedan marcadas: ✓✓
 
 **Si NO coinciden:**
-```
-✗ No es un par. Turno del Jugador 2
-```
+
+    ✗ No es un par. Turno del Jugador 2
+
 Las cartas se voltean nuevamente
 
 ### 4. Historial de Jugadas
 
 Durante el juego verás las últimas jugadas:
-```
-═══ ÚLTIMAS JUGADAS ═══
-  J1: Cartas 5-12 → Pikachu ✓
-  J2: Cartas 3-8 → Charmander ✗
-  J1: Cartas 1-14 → Bulbasaur ✓
-```
+
+    ═══ ÚLTIMAS JUGADAS ═══
+      J1: Cartas 5-12 → Pikachu ✓
+      J2: Cartas 3-8 → Charmander ✗
+      J1: Cartas 1-14 → Bulbasaur ✓
 
 ### 5. Fin de la Partida
 
 Cuando todas las parejas sean encontradas:
 
-```
-╔═══════════════════════════════════════╗
-║        ¡PARTIDA TERMINADA!            ║
-╚═══════════════════════════════════════╝
-
-PUNTUACIÓN FINAL:
-  Jugador 1: 5 puntos
-  Jugador 2: 4 puntos
-
-🏆 ¡GANADOR: Jugador 1!
-```
+    ╔═══════════════════════════════════════╗
+    ║        ¡PARTIDA TERMINADA!            ║
+    ╚═══════════════════════════════════════╝
+    
+    PUNTUACIÓN FINAL:
+      Jugador 1: 5 puntos
+      Jugador 2: 4 puntos
+    
+    🏆 ¡GANADOR: Jugador 1!
 
 **En caso de empate:**
-```
-🤝 ¡EMPATE!
-```
+
+    🤝 ¡EMPATE!
 
 ---
 
@@ -283,11 +263,10 @@ Permite jugar con una configuración reproducible del tablero.
 3. El tablero se generará usando esa semilla
 
 **Ejemplo:**
-```
-Ingresa la semilla (número entero): 42
-```
 
-Si vuelves a jugar con semilla `42`, tendrás exactamente el mismo tablero.
+    Ingresa la semilla (número entero): 42
+
+Si vuelves a jugar con semilla 42, tendrás exactamente el mismo tablero.
 
 ---
 
@@ -296,25 +275,24 @@ Si vuelves a jugar con semilla `42`, tendrás exactamente el mismo tablero.
 El juego tiene 3 estilos visuales:
 
 ### 1. ESTILO_BORDES (Por defecto)
-```
-╔══════════════════════════════════════╗
-║ MENÚ PRINCIPAL - POKEMON MEMORY      ║
-╠══════════════════════════════════════╣
-║ C) Cargar archivo                    ║
-╚══════════════════════════════════════╝
-```
+
+    ╔══════════════════════════════════════╗
+    ║ MENÚ PRINCIPAL - POKEMON MEMORY      ║
+    ╠══════════════════════════════════════╣
+    ║ C) Cargar archivo                    ║
+    ╚══════════════════════════════════════╝
 
 ### 2. ESTILO_RETRO
-```
-+--------------------------------------+
-| MENÚ PRINCIPAL - POKEMON MEMORY     |
-+--------------------------------------+
-| [C] Cargar archivo                  |
-+--------------------------------------+
-```
 
-### 3. ESTILO_MINIMALISTA
+    +--------------------------------------+
+    | MENÚ PRINCIPAL - POKEMON MEMORY     |
+    +--------------------------------------+
+    | [C] Cargar archivo                  |
+    +--------------------------------------+
+
 ```
+---
+### ESTILOS:
 
 ** Presiona **E** para rotar entre los 3 estilos.
 
@@ -375,42 +353,45 @@ El juego incluye 2 archivos de ejemplo:
 
 ### Sesión de juego paso a paso:
 
-```bash
-** 1. Ejecutar el juego
-./tp2 ejemplos/largo.csv
+**1. Ejecutar el juego**
 
-** 2. En el menú principal
-✓ Archivo cargado: 15 pokemones
+    ./tp2 ejemplos/largo.csv
 
-** Presionar M → I (para ver la lista de pokemones por ID)
-** Presionar A (volver al menú principal)
+**2. En el menú principal**
 
-** 3. Presionar J (jugar con semilla aleatoria)
+    ✓ Archivo cargado: 15 pokemones
 
-** 4. Jugador 1 selecciona carta 0
-Selecciona una carta (0-17): 0
-→ Primera carta seleccionada
+**Presionar M → I (para ver la lista de pokemones por ID)**
 
-** 5. Jugador 1 selecciona carta 5
-Selecciona una carta (0-17): 5
-✗ No es un par. Turno del Jugador 2
+**Presionar A (volver al menú principal)**
 
-** 6. Jugador 2 selecciona carta 1
-Selecciona una carta (0-17): 1
-→ Primera carta seleccionada
+**3. Presionar J (jugar con semilla aleatoria)**
 
-** 7. Jugador 2 selecciona carta 7
-Selecciona una carta (0-17): 7
-✓ ¡Par encontrado! El Jugador 2 gana un punto
+**4. Jugador 1 selecciona carta 0**
 
-** ... continuar hasta encontrar todos los pares ...
+    Selecciona una carta (0-17): 0
+    → Primera carta seleccionada
 
+**5. Jugador 1 selecciona carta 5**
 
-🏆 ¡GANADOR: Jugador 1 / 2!
+    Selecciona una carta (0-17): 5
+    ✗ No es un par. Turno del Jugador 2
 
+**6. Jugador 2 selecciona carta 1**
 
-¡Gracias por jugar! Hasta pronto.
-```
+    Selecciona una carta (0-17): 1
+    → Primera carta seleccionada
+
+**7. Jugador 2 selecciona carta 7**
+
+    Selecciona una carta (0-17): 7
+    ✓ ¡Par encontrado! El Jugador 2 gana un punto
+
+**... continuar hasta encontrar todos los pares ...**
+
+    🏆 ¡GANADOR: Jugador 1 / 2!
+    
+    ¡Gracias por jugar! Hasta pronto.
 
 ---
 
