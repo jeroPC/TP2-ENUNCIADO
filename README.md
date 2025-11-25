@@ -328,11 +328,9 @@ Cada estructura de datos fue elegida cuidadosamente según las necesidades espec
 
 - Pila Original: [J1, J2, J3, J4, J5]  ← tope
 
-                . ↓ desapilar N veces (N=3)
 
 - Pila Auxiliar: [J5, J4, J3]  ← copiamos a resultado
 
-                . ↓ devolver
 
 - Pila Original: [J1, J2, J3, J4, J5]  ← restaurada
 
