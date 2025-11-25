@@ -282,7 +282,7 @@ tp1_destruir(tp1);  // Libera la memoria de los pokemones
 ```
 
 **Errores detectados:**
-- Intentábamos leer memoria ya liberada (use-after-free)
+- Intentaba leer memoria ya liberada (use-after-free)
 - Nombres de pokemones apuntaban a memoria liberada
 - Al buscar pokemones después de destruir tp1
 
@@ -316,20 +316,6 @@ El historial se implementa con una pila. Para obtener las últimas N jugadas sin
 El juego alterna entre jugadores cuando ocurre un error (par incorrecto). Cuando un jugador acierta, mantiene el turno para la siguiente jugada.
 
 ---
-
-## Estructuras de Datos Utilizadas
-
-<div align="center">
-<img width="70%" src="img/juego.svg">
-</div>
-
-El diagrama muestra cómo se relacionan las estructuras internas del juego. La pokedex mantiene los pokemones originales, mientras que las cartas solo tienen referencias a estos pokemones.
-
-<div align="center">
-<img width="70%" src="img/menu.svg">
-</div>
-
-El menú mantiene un array dinámico de opciones que puede contener tanto acciones como submenús, permitiendo navegación jerárquica.
 
 ---
 
