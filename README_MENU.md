@@ -23,7 +23,11 @@ Este programa demuestra el funcionamiento completo del TDA (Tipo de Dato Abstrac
 - `ESTILO_MINIMALISTA`: Menú simple sin decoraciones
 - `ESTILO_BORDES`: Menú con bordes usando caracteres Unicode
 - `ESTILO_RETRO`: Menú estilo retro con caracteres ASCII
+- `ESTILO_PERSONALIZADO`: Estilos creados por el usuario sin modificar menu.c
 - Cambio dinámico de estilo durante la ejecución
+
+#### **Estilos Personalizados**
+El TDA Menú permite crear estilos completamente personalizados **sin modificar el código del menú**. Ver [ESTILOS_PERSONALIZADOS.md](ESTILOS_PERSONALIZADOS.md) para documentación completa y ejemplos.
 
 ### 5. **Acciones Implementadas**
 - `S`: Saludar (usa contexto externo para mostrar el nombre)

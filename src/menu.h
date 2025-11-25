@@ -5,25 +5,25 @@
 
 /* Estilos predefinidos para el menú */
 typedef enum {
-    ESTILO_MINIMALISTA = 0,
-    ESTILO_BORDES = 1,
-    ESTILO_RETRO = 2,
-    ESTILO_PERSONALIZADO = 99,  // Indicador de estilo personalizado
-    TOTAL_ESTILOS = 3
+	ESTILO_MINIMALISTA = 0,
+	ESTILO_BORDES = 1,
+	ESTILO_RETRO = 2,
+	ESTILO_PERSONALIZADO = 99, // Indicador de estilo personalizado
+	TOTAL_ESTILOS = 3
 } estilo_menu_t;
 
 /* Estructura para definir un estilo personalizado.
  * Permite al usuario crear estilos visuales propios sin modificar menu.c
  */
 typedef struct estilo_personalizado {
-    char *borde_superior;       // Ej: "╔═══════╗"
-    char *borde_inferior;       // Ej: "╚═══════╝"
-    char *separador;            // Ej: "─────────"
-    char *prefijo_opcion;       // Ej: "  ▸ "
-    char *color_titulo;         // Color ANSI para el título
-    char *color_opciones;       // Color ANSI para las opciones
-    char *color_teclas;         // Color ANSI para las teclas
-    char *color_reset;          // ANSI reset
+	char *borde_superior; // Ej: "╔═══════╗"
+	char *borde_inferior; // Ej: "╚═══════╝"
+	char *separador; // Ej: "─────────"
+	char *prefijo_opcion; // Ej: "  ▸ "
+	char *color_titulo; // Color ANSI para el título
+	char *color_opciones; // Color ANSI para las opciones
+	char *color_teclas; // Color ANSI para las teclas
+	char *color_reset; // ANSI reset
 } estilo_personalizado_t;
 
 typedef struct menu menu_t;
@@ -57,8 +57,8 @@ menu_t *menu_crear(const char *titulo, estilo_menu_t estilo);
  * Devuelve true si se agregó correctamente, false en caso de error.
  */
 bool menu_agregar_opcion(menu_t *menu, char tecla, const char *descripcion,
-                         accion_menu_t accion, menu_t *submenu, 
-                         void *ctx_interno);
+			 accion_menu_t accion, menu_t *submenu,
+			 void *ctx_interno);
 
 /* Cambia el estilo visual del menú.
  * El estilo se aplica de forma cíclica (0, 1, 2, 0, 1, 2...).
@@ -83,15 +83,11 @@ estilo_menu_t menu_obtener_estilo(menu_t *menu);
  * 
  * Devuelve un puntero al estilo o NULL en caso de error.
  */
-estilo_personalizado_t *estilo_crear(
-    const char *borde_superior,
-    const char *borde_inferior,
-    const char *separador,
-    const char *prefijo_opcion,
-    const char *color_titulo,
-    const char *color_opciones,
-    const char *color_teclas
-);
+estilo_personalizado_t *
+estilo_crear(const char *borde_superior, const char *borde_inferior,
+	     const char *separador, const char *prefijo_opcion,
+	     const char *color_titulo, const char *color_opciones,
+	     const char *color_teclas);
 
 /* Destruye un estilo personalizado y libera su memoria.
  * Si el estilo es NULL, no hace nada.
@@ -104,7 +100,8 @@ void estilo_destruir(estilo_personalizado_t *estilo);
  * 
  * Devuelve true si se aplicó correctamente, false en caso de error.
  */
-bool menu_establecer_estilo_personalizado(menu_t *menu, estilo_personalizado_t *estilo);
+bool menu_establecer_estilo_personalizado(menu_t *menu,
+					  estilo_personalizado_t *estilo);
 
 /* Muestra el menú por consola con el estilo configurado.
  *

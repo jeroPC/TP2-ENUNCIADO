@@ -15,19 +15,19 @@ typedef struct pokemon pokemon_t;
 
 /* Estructura de una carta en el juego */
 typedef struct carta {
-    int posicion;           // Posición en el tablero (0-17)
-    pokemon_t *pokemon;     // Puntero al pokémon
-    bool descubierta;       // Si la carta está visible
-    bool emparejada;        // Si ya fue emparejada
+	int posicion; // Posición en el tablero (0-17)
+	pokemon_t *pokemon; // Puntero al pokémon
+	bool descubierta; // Si la carta está visible
+	bool emparejada; // Si ya fue emparejada
 } carta_t;
 
 /* Estructura de una jugada */
 typedef struct jugada {
-    int jugador;            // 1 o 2
-    int carta1;             // Posición de la primera carta
-    int carta2;             // Posición de la segunda carta
-    bool acierto;           // true si fue un par válido
-    char nombre_pokemon[MAX_NOMBRE_POKEMON]; // Nombre del pokémon encontrado
+	int jugador; // 1 o 2
+	int carta1; // Posición de la primera carta
+	int carta2; // Posición de la segunda carta
+	bool acierto; // true si fue un par válido
+	char nombre_pokemon[MAX_NOMBRE_POKEMON]; // Nombre del pokémon encontrado
 } jugada_t;
 
 /* Estado del juego */
@@ -63,8 +63,8 @@ size_t juego_cantidad_cartas(juego_t *juego);
  * 
  * Devuelve la cantidad de pokemones encontrados.
  */
-size_t juego_buscar_por_nombre(juego_t *juego, const char *nombre, 
-                               pokemon_t **resultados, size_t max_resultados);
+size_t juego_buscar_por_nombre(juego_t *juego, const char *nombre,
+			       pokemon_t **resultados, size_t max_resultados);
 
 /* Busca un pokémon por ID exacto.
  * 
@@ -78,9 +78,8 @@ pokemon_t *juego_buscar_por_id(juego_t *juego, int id);
  * callback: función que recibe el pokémon y un contexto
  * ctx: contexto pasado al callback
  */
-void juego_listar_por_nombre(juego_t *juego, 
-                            void (*callback)(pokemon_t *, void *), 
-                            void *ctx);
+void juego_listar_por_nombre(juego_t *juego,
+			     void (*callback)(pokemon_t *, void *), void *ctx);
 
 /* Muestra todos los pokemones ordenados por ID.
  * La función callback se invoca para cada pokémon.
@@ -88,9 +87,8 @@ void juego_listar_por_nombre(juego_t *juego,
  * callback: función que recibe el pokémon y un contexto
  * ctx: contexto pasado al callback
  */
-void juego_listar_por_id(juego_t *juego, 
-                        void (*callback)(pokemon_t *, void *), 
-                        void *ctx);
+void juego_listar_por_id(juego_t *juego, void (*callback)(pokemon_t *, void *),
+			 void *ctx);
 
 /* Inicia una nueva partida con pokemones aleatorios.
  * Selecciona 9 pokemones al azar y crea 18 cartas (9 pares).
@@ -150,8 +148,8 @@ int juego_seleccionar_carta(juego_t *juego, int posicion);
  * 
  * Devuelve la cantidad de jugadas copiadas.
  */
-size_t juego_obtener_ultimas_jugadas(juego_t *juego, jugada_t *jugadas, 
-                                     size_t max_jugadas);
+size_t juego_obtener_ultimas_jugadas(juego_t *juego, jugada_t *jugadas,
+				     size_t max_jugadas);
 
 /* Obtiene todas las jugadas de un jugador específico.
  * 
@@ -162,7 +160,7 @@ size_t juego_obtener_ultimas_jugadas(juego_t *juego, jugada_t *jugadas,
  * Devuelve la cantidad de jugadas copiadas.
  */
 size_t juego_obtener_jugadas_jugador(juego_t *juego, int jugador,
-                                     jugada_t *jugadas, size_t max_jugadas);
+				     jugada_t *jugadas, size_t max_jugadas);
 
 /* Verifica si la partida ha terminado.
  * Una partida termina cuando no quedan más cartas sin emparejar.
@@ -205,4 +203,3 @@ enum tipo_pokemon juego_tipo_desde_string(const char *tipo_str);
 const char *juego_tipo_a_string(enum tipo_pokemon tipo);
 
 #endif // JUEGO_H
-    
