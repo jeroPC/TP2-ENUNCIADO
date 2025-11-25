@@ -187,11 +187,9 @@ El menú soporta navegación jerárquica mediante submenús, permitiendo crear e
 - Si la semilla es 0, usa el tiempo actual
 - **Complejidad**: O(1) ya que siempre genera 18 cartas fijas
 
-'''
 <div align="center">
 <img width="70%" src="img/inicio_partida_semilla.svg">
 </div>
-'''
 
 ---
 **juego_partida_activa()**
@@ -296,38 +294,26 @@ Cada estructura de datos fue elegida cuidadosamente según las necesidades espec
 
 **Alternativas descartadas:**
 - **Array dinámico**: Requeriría manejo manual de capacidad
-- **ABB**: No necesitamos orden específico en la pokedex base
+- **ABB**: No es necesario un orden específico en la pokedex base
 - **Hash**: No permite iteración ordenada
 
 #### **Hash** → Búsqueda rápida por nombre
 **¿Por qué Hash?**
-- Búsquedas por nombre en **O(1) promedio** (vs O(n) lineal)
+- Búsquedas por nombre en **O(1) promedio** 
 - El juego requiere búsquedas frecuentes por nombre de pokemon
 - Complementa a la lista: lista para orden, hash para velocidad
 
-**Alternativas descartadas:**
-- **Lista sola**: Búsquedas O(n) serían muy lentas con muchos pokemones
-- **ABB por nombre**: Búsquedas O(log n), pero más complejo de mantener balanceado
-
 #### **ABB** → Ordenamiento temporal
 **¿Por qué ABB temporal?**
-- Necesitamos **listar pokemones ordenados** (por nombre o ID)
+- Necesitamos **listar pokemones ordenados** 
 - ABB permite inserción y recorrido inorden en O(n log n) promedio
-- Es **temporal**: se crea, se usa, se destruye (no almacena referencias)
-
-**Alternativas descartadas:**
-- **Ordenamiento de arrays**: Requeriría copiar toda la lista a un array
-- **ABB permanente**: Duplicaría memoria innecesariamente
+- Es **temporal**: se crea, se usa, se destruye 
 
 #### **Pila** → Historial de jugadas
 **¿Por qué Pila?**
 - Necesitamos las **últimas N jugadas** (LIFO = Last In, First Out)
 - Estructura natural para historial: lo más reciente está "arriba"
-- Operaciones push/pop en O(1)
-
-**Alternativas descartadas:**
-- **Cola**: FIFO no sirve, necesitamos acceso a las más recientes
-- **Lista**: Funcionaría, pero pila es más semántica para este caso
+- Operaciones apilar/desapilar en O(1)
 
 ---
 
@@ -367,21 +353,17 @@ El TDA menú usa un array dinámico que crece según demanda (similar al TP1):
 
 ```c
 struct menu {
-    opcion_t *opciones;  // Array dinámico
+    opcion_t *opciones;  
     size_t cantidad;
-    size_t capacidad;    // Capacidad actual
+    size_t capacidad;   
 };
+
 ```
 
 **Estrategia de crecimiento:**
 - Capacidad inicial: 10 opciones
 - Al llenarse: duplicar capacidad con `realloc`
 - Complejidad amortizada: O(1) por inserción
-
-**¿Por qué no una lista?**
-- Array permite acceso directo por índice O(1)
-- Cantidad de opciones es pequeña (raramente > 20)
-- Realloc es eficiente para tamaños pequeños
 
 ---
 
@@ -423,11 +405,8 @@ Implementé **copias profundas** de cada pokemon, asegurándome de que el juego 
 1. Reservar memoria nueva para cada estructura pokemon
 2. Copiar todos los valores (id, tipo, ataque, defensa, etc.)
 3. Duplicar el string del nombre con su propia memoria, no solo copiar el puntero
-----
 
-
-
-
+---
 
 ### 4. Problema: Mezcla Aleatoria de Cartas (Fisher-Yates)
 
@@ -447,7 +426,7 @@ Implementé **copias profundas** de cada pokemon, asegurándome de que el juego 
 
 **Complejidad:** O(n²) debido al acceso secuencial de listas, pero aceptable para n=18
 
-```
+---
 
 ### 5. Problema: Validación de Cartas Seleccionadas
 
@@ -466,6 +445,7 @@ if (primera_carta && primera_carta->posicion == posicion)
     return ERROR_MISMA_CARTA;
 ```
 
+---
 
 
 
