@@ -326,11 +326,15 @@ Cada estructura de datos fue elegida cuidadosamente según las necesidades espec
 **Solución:** Usar una pila auxiliar temporal:
 
 '''
-Pila Original: [J1, J2, J3, J4, J5]  ← tope
+- Pila Original: [J1, J2, J3, J4, J5]  ← tope
+
                 ↓ pop N veces (N=3)
-Pila Auxiliar: [J5, J4, J3]  ← copiamos a resultado
+
+- Pila Auxiliar: [J5, J4, J3]  ← copiamos a resultado
+
                 ↓ devolver
-Pila Original: [J1, J2, J3, J4, J5]  ← restaurada
+
+- Pila Original: [J1, J2, J3, J4, J5]  ← restaurada
 
 '''
 
