@@ -442,37 +442,47 @@ void juego_crear_cartas_memoria(juego_t *juego)
 		return;
 
 	size_t total = lista_cantidad(juego->pokedex);
-	bool usados[total];
-	memset(usados, 0, sizeof(usados));
+	size_t *indices = malloc(sizeof(size_t) * total);
+	if (!indices)
+		return;
 
-	for (int pares_creados = 0; pares_creados < 9;) {
-		size_t idx = (size_t)(rand() % (int)total);
+	for (size_t i = 0; i < total; i++) {
+		indices[i] = i;
+	}
 
-		if (!usados[idx]) {
-			pokemon_t *pokemon =
-				lista_buscar_elemento(juego->pokedex, idx);
-			if (!pokemon)
-				continue;
+	// Fisher-Yates shuffle on indices
+	for (size_t i = total - 1; i > 0; i--) {
+		size_t j = (size_t)(rand() % (int)(i + 1));
+		size_t temp = indices[i];
+		indices[i] = indices[j];
+		indices[j] = temp;
+	}
 
-			carta_t *carta1 = crear_carta(pokemon, 0);
-			carta_t *carta2 = crear_carta(pokemon, 0);
+	int pares_creados = 0;
+	for (size_t i = 0; i < total && pares_creados < 9; i++) {
+		size_t idx = indices[i];
+		pokemon_t *pokemon = lista_buscar_elemento(juego->pokedex, idx);
+		if (!pokemon)
+			continue;
 
-			if (carta1 && carta2) {
-				if (lista_agregar(juego->cartas, carta1) &&
-				    lista_agregar(juego->cartas, carta2)) {
-					usados[idx] = true;
-					pares_creados++;
-				} else {
-					free(carta1);
-					free(carta2);
-				}
+		carta_t *carta1 = crear_carta(pokemon, 0);
+		carta_t *carta2 = crear_carta(pokemon, 0);
+
+		if (carta1 && carta2) {
+			if (lista_agregar(juego->cartas, carta1) &&
+			    lista_agregar(juego->cartas, carta2)) {
+				pares_creados++;
 			} else {
 				free(carta1);
 				free(carta2);
 			}
+		} else {
+			free(carta1);
+			free(carta2);
 		}
 	}
 
+	free(indices);
 	mezclar_cartas(juego->cartas);
 	actualizar_posiciones_cartas(juego->cartas);
 }
@@ -519,53 +529,39 @@ void juego_destruir(juego_t *juego)
 	free(juego);
 }
 
+static const struct {
+	enum tipo_pokemon tipo;
+	const char *str;
+} conversion_tipos[] = {
+	{ TIPO_ELEC, "ELEC" }, { TIPO_FUEG, "FUEG" }, { TIPO_PLAN, "PLAN" },
+	{ TIPO_AGUA, "AGUA" }, { TIPO_NORM, "NORM" }, { TIPO_FANT, "FANT" },
+	{ TIPO_PSI, "PSI" },   { TIPO_LUCH, "LUCH" }
+};
+
 enum tipo_pokemon juego_tipo_desde_string(const char *tipo_str)
 {
 	if (!tipo_str)
 		return TIPO_NORM;
 
-	if (strcmp(tipo_str, "ELEC") == 0)
-		return TIPO_ELEC;
-	if (strcmp(tipo_str, "FUEG") == 0)
-		return TIPO_FUEG;
-	if (strcmp(tipo_str, "PLAN") == 0)
-		return TIPO_PLAN;
-	if (strcmp(tipo_str, "AGUA") == 0)
-		return TIPO_AGUA;
-	if (strcmp(tipo_str, "NORM") == 0)
-		return TIPO_NORM;
-	if (strcmp(tipo_str, "FANT") == 0)
-		return TIPO_FANT;
-	if (strcmp(tipo_str, "PSI") == 0)
-		return TIPO_PSI;
-	if (strcmp(tipo_str, "LUCH") == 0)
-		return TIPO_LUCH;
+	for (size_t i = 0;
+	     i < sizeof(conversion_tipos) / sizeof(conversion_tipos[0]); i++) {
+		if (strcmp(tipo_str, conversion_tipos[i].str) == 0) {
+			return conversion_tipos[i].tipo;
+		}
+	}
 
 	return TIPO_NORM;
 }
 
 const char *juego_tipo_a_string(enum tipo_pokemon tipo)
 {
-	switch (tipo) {
-	case TIPO_ELEC:
-		return "ELEC";
-	case TIPO_FUEG:
-		return "FUEG";
-	case TIPO_PLAN:
-		return "PLAN";
-	case TIPO_AGUA:
-		return "AGUA";
-	case TIPO_NORM:
-		return "NORM";
-	case TIPO_FANT:
-		return "FANT";
-	case TIPO_PSI:
-		return "PSI";
-	case TIPO_LUCH:
-		return "LUCH";
-	default:
-		return "NORM";
+	for (size_t i = 0;
+	     i < sizeof(conversion_tipos) / sizeof(conversion_tipos[0]); i++) {
+		if (conversion_tipos[i].tipo == tipo) {
+			return conversion_tipos[i].str;
+		}
 	}
+	return "NORM";
 }
 
 // FUNCIONES AUXILIARES 
